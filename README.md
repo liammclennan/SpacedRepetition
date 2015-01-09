@@ -23,3 +23,13 @@ Usage
 The example above will find this markdown file, parse the spaced repetition microformat and  generate a csv file containing one row:
 
     "Do you like my hat?", "I do not!"
+
+About spaced repetition
+--------
+
+From wikipedia:
+
+> Spaced repetition is a learning technique that incorporates increasing intervals of time between subsequent review of previously learned material in order to exploit the psychological spacing effect. 
+
+<img src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Leitner_system_alternative.svg/460px-Leitner_system_alternative.svg.png" alt="spaced repetition"/>
+
