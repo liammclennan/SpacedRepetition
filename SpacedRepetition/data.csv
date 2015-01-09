@@ -1,2 +1,0 @@
-"How is a list defined in clojure? ","Space separated, wrapped in parens. e.g. (1 2 3) "
-"How is a vector defined in clojure? ","Space separated, wrapped in square brackets e.g. [1 2 3] "
