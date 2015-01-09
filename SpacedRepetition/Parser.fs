@@ -9,7 +9,7 @@ let pqa = pq .>>. pa
 let pqas1 = many (pfront >>. (pqa .>> pfront) .>> pfront)
 let pqas = (attempt pqas1 <|> (preturn [])) 
 
-let parse text : (string * string) list= 
+let parse text = 
     match run pqas text with
     | Success(qs, _, _)   -> qs
     | Failure(errorMsg, _, _) -> []
