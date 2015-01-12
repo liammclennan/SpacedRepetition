@@ -1,4 +1,7 @@
-﻿module Parser
+﻿// how to reference FParsec in fsi
+// #r @"C:\work\SpacedRepetition\SpacedRepetition\packages\\FParsec.1.0.1\lib\net40-client\FParsecCS.dll";;
+// #r @"C:\work\SpacedRepetition\SpacedRepetition\packages\\FParsec.1.0.1\lib\net40-client\FParsec.dll";;
+module Parser
 
 open FParsec    
 

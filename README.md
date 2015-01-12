@@ -33,3 +33,7 @@ From wikipedia:
 
 <img src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Leitner_system_alternative.svg/460px-Leitner_system_alternative.svg.png" alt="spaced repetition"/>
 
+Long-term goals
+-----
+
+Open, simple system for recording and accessing study notes, with embedded spaced repetition data and some way to study the spaced repetition data. 
