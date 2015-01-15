@@ -69,6 +69,7 @@
     <Content Include="Web.config" />
     <None Include="Content\react.d.ts" />
     <Content Include="Content\smodules.js" />
+    <Content Include="Content\server.js" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -77,6 +78,7 @@
     </None>
     <None Include="packages.config" />
     <Content Include="readme.txt" />
+    <Compile Include="Operators.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="AjaxMin">

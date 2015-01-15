@@ -1,4 +1,4 @@
-﻿(function () {
+﻿define('app', ['server'], function (server) {
     var R = React.DOM;
 
     var formMixin = {
@@ -129,19 +129,23 @@
         },
         actions: {
             importWiki: function (props, url) {
-                page('/import/' + btoa(encodeURIComponent(url)));
+                server.importGitWiki(url).then(function () {
+                    page('/deck/' + btoa(encodeURIComponent(url)));
+                });
+
                 return props;
             },
             returnToWiki: function (props, url) { }
         }
     }, {
-        title: 'Import',
-        route: '/import/:url',
+        title: 'Deck',
+        route: '/deck/:url',
         entry: function (params) {
             var url = decodeURIComponent(atob(params.url));
             return [Import({}), {}];
         },
-        actions: {}
+        actions: {
+        }
     }], document.getElementById('app'));
-})();
+});
 
