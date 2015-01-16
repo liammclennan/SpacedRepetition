@@ -6,7 +6,12 @@
 
     return {
         importGitWiki: function (url) {
-            return Q($.post(appUrl + '/import?url=' + url)).catch(errCallback);
+            return Q($.ajax(
+                appUrl + '/import', {
+                    contentType: 'application/json',
+                    type: 'POST',
+                    data: JSON.stringify({ url: url })
+                })).catch(errCallback);
         }
     };
 });
