@@ -13,13 +13,4 @@ type Bootstrapper() =
     override this.ApplicationStartup(container:TinyIoCContainer, pipelines:IPipelines ) =
         ()
 
-    override this.RequestStartup(requestContainer, pipelines:IPipelines , context:NancyContext) = 
-        pipelines.OnError.AddItemToEndOfPipeline(fun c e -> 
-            let ex = e
-            new Response())
-        //pipelines.OnError.AddItemToEndOfPipeline(fun z a -> "")
-               //log.Error("Unhandled error on request: " + context.Request.Url + " : " + a.Message, a)
-//               ErrorResponse.FromException(a))
-            
-
-        //RequestStartup(requestContainer, pipelines, context)
+   

@@ -12,7 +12,7 @@
     <AssemblyName>DeleteMe</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.3.1.0</TargetFSharpCoreVersion>
-    <Name>DeleteMe</Name>
+    <Name>App</Name>
     <NuGetPackageImportStamp>5d13f33a</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -85,6 +85,7 @@
       <HintPath>C:\work\SpacedRepetition\code3\StudyNotes\packages\PostgresDoc\PostgresDoc.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
   </ItemGroup>

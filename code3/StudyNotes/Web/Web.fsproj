@@ -111,8 +111,8 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DeleteMe\DeleteMe.fsproj">
-      <Name>DeleteMe</Name>
+    <ProjectReference Include="..\App\App.fsproj">
+      <Name>App</Name>
       <Project>{2cdded10-bf62-4602-b0af-fa6bbcdc7184}</Project>
       <Private>True</Private>
     </ProjectReference>

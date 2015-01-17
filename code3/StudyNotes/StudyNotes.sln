@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Web", "Web\Web.fsproj", "{F592392F-6971-45A4-A0A3-7DF3388237C4}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "DeleteMe", "DeleteMe\DeleteMe.fsproj", "{2CDDED10-BF62-4602-B0AF-FA6BBCDC7184}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "App", "App\App.fsproj", "{2CDDED10-BF62-4602-B0AF-FA6BBCDC7184}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
