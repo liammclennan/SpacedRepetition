@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "StudyNotes", "StudyNotes\StudyNotes.fsproj", "{F592392F-6971-45A4-A0A3-7DF3388237C4}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Web", "Web\Web.fsproj", "{F592392F-6971-45A4-A0A3-7DF3388237C4}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "DeleteMe", "DeleteMe\DeleteMe.fsproj", "{2CDDED10-BF62-4602-B0AF-FA6BBCDC7184}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{F592392F-6971-45A4-A0A3-7DF3388237C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F592392F-6971-45A4-A0A3-7DF3388237C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F592392F-6971-45A4-A0A3-7DF3388237C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CDDED10-BF62-4602-B0AF-FA6BBCDC7184}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CDDED10-BF62-4602-B0AF-FA6BBCDC7184}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CDDED10-BF62-4602-B0AF-FA6BBCDC7184}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CDDED10-BF62-4602-B0AF-FA6BBCDC7184}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
