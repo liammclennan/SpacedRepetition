@@ -78,7 +78,6 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="packages.config" />
-    <Content Include="readme.txt" />
     <Compile Include="Operators.fs" />
   </ItemGroup>
   <ItemGroup>
