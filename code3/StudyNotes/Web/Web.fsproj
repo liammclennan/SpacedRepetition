@@ -57,15 +57,16 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.fs" />
     <Compile Include="IndexModule.fs" />
-    <Content Include="Content\app.js" />
-    <Content Include="Content\bootstrap.js" />
-    <Content Include="Content\jquery-2.0.3.js" />
-    <Content Include="Content\nancy-logo.png" />
-    <Content Include="Content\react-router.js" />
-    <Content Include="Content\react.js" />
-    <Content Include="Content\smodules.js" />
-    <Content Include="Content\server.js" />
-    <Content Include="Content\euclid.js" />
+    <Content Include="Content\js\server.js" />
+    <Content Include="Content\js\app.js" />
+    <Content Include="Content\js\components.js" />
+    <Content Include="Content\js-nih\bootstrap.js" />
+    <Content Include="Content\js-nih\jquery-2.0.3.js" />
+    <Content Include="Content\js-nih\page.js" />
+    <Content Include="Content\js-nih\q.js" />
+    <Content Include="Content\js-nih\react.js" />
+    <Content Include="Content\js-nih\smodules.js" />
+    <Content Include="Content\js-nih\euclid.js" />
     <Content Include="Views\index.cshtml">
       <SubType>Designer</SubType>
     </Content>

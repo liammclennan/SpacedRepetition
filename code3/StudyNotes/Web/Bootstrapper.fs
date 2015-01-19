@@ -6,11 +6,17 @@ open Nancy.Bootstrapper
 
 type Bootstrapper() =
     inherit DefaultNancyBootstrapper()
-    // The bootstrapper enables you to reconfigure the composition of the framework,
-    // by overriding the various methods and properties.
-    // For more information https://github.com/NancyFx/Nancy/wiki/Bootstrapper
 
-    override this.ApplicationStartup(container:TinyIoCContainer, pipelines:IPipelines ) =
+    override this.RequestStartup(container, pipelines, context) = 
+        pipelines.AfterRequest.AddItemToEndOfPipeline(
+            fun ctx -> 
+                ctx.Response
+                    .WithHeader("Access-Control-Allow-Origin", "*")
+                    .WithHeader("Access-Control-Allow-Methods", "*")
+                    .WithHeader("Access-Control-Allow-Headers", "Accept, Origin, Content-type")
+                    |> ignore
+                ()
+            )
         ()
 
    

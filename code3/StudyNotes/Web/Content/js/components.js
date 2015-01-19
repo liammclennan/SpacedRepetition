@@ -1,4 +1,4 @@
-﻿define('app', ['server','euclid'], function (server, euclid) {
+define('components', ['euclid'], function (euclid) {
     var R = React.DOM;
 
     var formMixin = {
@@ -56,7 +56,6 @@
             return props;
         }
     };
-
     var Home = React.createFactory(React.createClass({
         getInitialState: function () {
             return { importUrl: '' };
@@ -79,41 +78,17 @@
             euclid.action('importWiki', this.state.importUrl);
         },
         mixins: [formMixin]
-
     }));
 
     var Import = React.createFactory(React.createClass({
         render: function () {
+            console.dir(this.props);
             return React.DOM.p(null, 'This is the import component');
         }
     }));
 
-    euclid.start([{
-        title: 'Home',
-        route: '/',
-        entry: function () {
-            var data = { a: 'This is the home prop "a"' };
-            return [Home(data), data];
-        },
-        actions: {
-            importWiki: function (props, url) {
-                server.importGitWiki(url).then(function () {
-                    page('/deck/' + btoa(encodeURIComponent(url)));
-                });
-
-                return props;
-            },
-            returnToWiki: function (props, url) { }
-        }
-    }, {
-        title: 'Deck',
-        route: '/deck/:url',
-        entry: function (params) {
-            var url = decodeURIComponent(atob(params.url));
-            return [Import({}), {}];
-        },
-        actions: {
-        }
-    }], document.getElementById('app'));
+    return {
+        Home: Home,
+        Import: Import
+    };
 });
-
