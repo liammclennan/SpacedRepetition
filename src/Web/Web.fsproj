@@ -79,7 +79,6 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="packages.config" />
-    <Compile Include="Operators.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
