@@ -52,4 +52,5 @@ Ankh.NoLoad
 
 temp/
 data.csv
-
+*~
+*swp
