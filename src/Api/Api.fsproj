@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <RootNamespace>StudyNotes</RootNamespace>
-    <AssemblyName>StudyNotes</AssemblyName>
+    <AssemblyName>StudyNotes.Api</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -57,20 +57,6 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.fs" />
     <Compile Include="IndexModule.fs" />
-    <Content Include="Content\js\server.js" />
-    <Content Include="Content\js\app.js" />
-    <Content Include="Content\js\components.js" />
-    <Content Include="Content\js-nih\bootstrap.js" />
-    <Content Include="Content\js-nih\jquery-2.0.3.js" />
-    <Content Include="Content\js-nih\page.js" />
-    <Content Include="Content\js-nih\q.js" />
-    <Content Include="Content\js-nih\react.js" />
-    <Content Include="Content\js-nih\smodules.js" />
-    <Content Include="Content\js-nih\euclid.js" />
-    <Content Include="Views\index.cshtml">
-      <SubType>Designer</SubType>
-    </Content>
-    <None Include="Views\_FrontLayout.cshtml" />
     <Content Include="Web.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
