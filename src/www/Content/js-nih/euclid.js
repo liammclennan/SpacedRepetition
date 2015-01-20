@@ -1,4 +1,4 @@
-﻿define('euclid', [], function () {
+﻿define('euclid', ['fermat'], function (fermat) {
     if (!Router) {
         console.error("Euclid is missing required dependency Flatiron Director - https://github.com/flatiron");
         return;
@@ -9,7 +9,7 @@
         rootProps: {},
         rootComponent: {},
         start: function (routes, mountPoint, states) {
-            this.states = states;
+            this.state = fermat(states);
             this.router = new Router().init('/');
             routes.forEach(register);
 
@@ -20,7 +20,7 @@
             return euclid;
 
             function register(route) {
-                var path = euclid.states[route.state || route.title];
+                var path = euclid.state(route.state || route.title);
                 euclid.router.on(path, function () {
                     Q(route.entry.apply(null, arguments)).then(function (startData) {
                         if (!Array.isArray(startData) || startData.length != 2 || !startData[0]) {
@@ -45,19 +45,6 @@
         },
         navigate: function (state, components) {
             window.location.hash = this.state(state, components);
-        },
-        // build a url, by mapping url components onto a state. e.g.
-        // Deck: '/deck/:url'
-        /// state('Deck', { url: 'foo'});
-        // --> /deck/foo
-        state: function (state, components) {
-            var pattern = this.states[state];
-            if (!pattern) {
-                throw new Error('Unknown state ' + state);
-            }
-            return Array.prototype.reduce.call(Object.keys(components), function (prev,curr) {
-                return prev.replace(':'+curr, components[curr]);
-            }, pattern);
         }
     };
     return euclid;
