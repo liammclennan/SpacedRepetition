@@ -1,6 +1,5 @@
 ﻿define('server', [], function () {
     var appUrl = 'http://localhost:11285';
-    
 
     return {
         importGitWiki: function (url) {
@@ -13,8 +12,19 @@
         },
         getDeck: function (url) {
             return doAjaxWithErrorHandler($.ajax(
-                appUrl + '/deck/' + btoa(url), {
-            }));
+                appUrl + '/deck?url=' + url, {
+            })).then(function (decks) {
+                if (!decks || decks.length != 1)
+                {
+                    throw new Error('"getDeck" must return exactly one deck');
+                }
+                return decks[0];
+            });
+        },
+        getDecks: function () {
+            return doAjaxWithErrorHandler($.ajax(
+                appUrl + '/decks'
+            ));
         }
     };
 

@@ -1,4 +1,4 @@
-define('components', ['euclid'], function (euclid) {
+define('components', ['euclid','urls'], function (euclid, urls) {
     var R = React.DOM;
 
     var formMixin = {
@@ -56,9 +56,24 @@ define('components', ['euclid'], function (euclid) {
             return props;
         }
     };
+
+    var DeckListItem = React.createFactory(React.createClass({
+        propTypes: {
+            name: React.PropTypes.string.isRequired,
+            sourceUrl: React.PropTypes.string.isRequired
+        },
+        render: function () {
+            return R.li(null, R.a({href: '#' + euclid.state('Deck', {url: urls.encodeForPath(this.props.sourceUrl)})}, this.props.name));
+        }
+    }));
+
     var Home = React.createFactory(React.createClass({
+        displayName: 'Home',
         getInitialState: function () {
             return { importUrl: '' };
+        },
+        propTypes: {
+            decks: React.PropTypes.array.isRequired
         },
         render: function () {
             return React.DOM.div(
@@ -71,7 +86,15 @@ define('components', ['euclid'], function (euclid) {
                 R.form({ className: 'form-inline' },
                     R.div({ className: 'form-group' },
                         R.input({ type: 'text', className: 'form-control', placeholder: 'wiki name' }),
-                        R.button(null, 'Return to Wiki'))));
+                        R.button(null, 'Return to Wiki'))),
+                R.div(null, 
+                    R.h2(null, 'Wikis'),
+                    R.ul(null, this.props.decks.map(function (deck) {
+                        deck.key = deck.id;
+                        return DeckListItem(deck);
+                    }))
+                )
+                );
         },
         'import': function (e) {
             e.preventDefault();
@@ -80,15 +103,18 @@ define('components', ['euclid'], function (euclid) {
         mixins: [formMixin]
     }));
 
-    var Import = React.createFactory(React.createClass({
+    var Deck = React.createFactory(React.createClass({
         render: function () {
             console.dir(this.props);
-            return React.DOM.p(null, 'This is the import component');
+            return R.div(null, 
+                R.h1(null, this.props.name),
+                R.button(null, 'Sync Now'),
+                R.p(null, this.props.sourceUrl + 'cat'));
         }
     }));
 
     return {
         Home: Home,
-        Import: Import
+        Deck: Deck
     };
 });

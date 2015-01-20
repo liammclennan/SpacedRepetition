@@ -4,34 +4,35 @@
     function (server, euclid, components) {
     
     euclid.start([{
-        title: 'Home',
-        route: '/',
+        title: 'Home',        
         entry: function () {
-            return [components.Home(null), null];
+            return server.getDecks().then(function (decks) {
+                var data = {decks: decks};
+                return [components.Home(data), data];
+            });
         },
         actions: {
             importWiki: function (props, url) {
-                server.importGitWiki(url).then(function () {
-                    page('/deck/' + btoa(url));
+                return server.importGitWiki(url).then(function () {
+                    euclid.navigate('/deck/' + encodeURIComponent(btoa(url)));
+                    return props;
                 });
-
-                return props;
-            },
-            returnToWiki: function (props, url) { }
+            }
         }
     }, {
         title: 'Deck',
-        route: '/deck/:url',
-        entry: function (params) {
-            var url = atob(params.url);
-            var data = { url: url };
-            return server.getDeck(url).then(function (deck) {
-                console.dir(deck);
-                return [components.Import(data), data];
+        entry: function (urlEncoded) {
+            var url = atob(decodeURIComponent(urlEncoded));
+            
+            return server.getDeck(url).then(function (deck) {                
+                return [components.Deck(deck), deck];
             });
         },
         actions: {
         }
-    }], document.getElementById('app'));
+    }], document.getElementById('app'), {
+        'Home': '/',
+        'Deck': '/deck/:url'
+    });
 });
 

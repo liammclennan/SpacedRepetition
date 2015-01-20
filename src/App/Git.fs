@@ -22,6 +22,7 @@ let fetch url =
     let repoDir = 
         Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "temp", urlHash)
     if Directory.Exists(repoDir) then deleteDirectory repoDir
+    // todo: handle LibGit2SharpException (e.g. 401 unauthorized)
     Repository.Clone(
         url, 
         repoDir) |> ignore

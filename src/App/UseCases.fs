@@ -6,10 +6,14 @@ type Card = { id:System.Guid; front: string; back: string; due: System.DateTime;
 type Deck = { id:System.Guid; name: string; sourceUrl: string }
 
 let private store = { connString = System.Configuration.ConfigurationManager.ConnectionStrings.["db"].ConnectionString }
-    
+
+let listDecks = 
+    query<Deck> store "select data from deck;" []
+
 let viewDeck url =
     ["sourceUrl", box url]
     |> query<Deck> store "select data from deck where data->>'sourceUrl' = :sourceUrl;"
+    |> (fun a -> Array.sub a 0 1)
 
 let import url = 
     let repoDir = Git.fetch url

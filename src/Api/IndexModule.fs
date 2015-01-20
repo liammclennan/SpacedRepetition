@@ -15,13 +15,14 @@ type IndexModule() as x =
         let model = x.Bind<Url>()
         UseCases.import model.url
         x.Response.AsText(model.url) |> box
+
+    do x.Get.["/decks"] <- fun _ ->
+        x.Response.AsJson(UseCases.listDecks, HttpStatusCode.OK) |> box
     
-    do x.Get.["/deck/:encodedUrl"] <- fun parameters ->
-        let url = (parameters :?> Nancy.DynamicDictionary).["encodedUrl"] 
+    do x.Get.["/deck"] <- fun _ ->
+        let url = (x.Request.Query :?> Nancy.DynamicDictionary).["url"] 
                     |> string
-        let deck = Convert.FromBase64String(url) 
-                    |> Text.Encoding.UTF8.GetString
-                    |> UseCases.viewDeck
+        let deck = url |> UseCases.viewDeck
         if Array.isEmpty deck then            
             box HttpStatusCode.NotFound
         else
