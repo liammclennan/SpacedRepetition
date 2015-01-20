@@ -94,7 +94,7 @@ define('components', ['euclid','urls'], function (euclid, urls) {
                         return DeckListItem(deck);
                     }))
                 )
-                );
+            );
         },
         'import': function (e) {
             e.preventDefault();
@@ -104,12 +104,14 @@ define('components', ['euclid','urls'], function (euclid, urls) {
     }));
 
     var Deck = React.createFactory(React.createClass({
+        componentWillMount: function () {
+            euclid.action('loadCards');
+        },
         render: function () {
-            console.dir(this.props);
             return R.div(null, 
-                R.h1(null, this.props.name),
+                R.h1(null, this.props.deck.name),
                 R.button(null, 'Sync Now'),
-                R.p(null, this.props.sourceUrl + 'cat'));
+                R.p(null, this.props.deck.sourceUrl));
         }
     }));
 

@@ -25,6 +25,10 @@
             return doAjaxWithErrorHandler($.ajax(
                 appUrl + '/decks'
             ));
+        },
+        getCards: function (deckId) {
+            console.log(deckId);
+            return Q([]);
         }
     };
 

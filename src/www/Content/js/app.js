@@ -12,7 +12,8 @@
             });
         },
         actions: {
-            importWiki: function (props, url) {
+            importWiki: function (url) {
+                var props = this;
                 return server.importGitWiki(url).then(function () {
                     euclid.navigate('/deck/' + encodeURIComponent(btoa(url)));
                     return props;
@@ -24,11 +25,20 @@
         entry: function (urlEncoded) {
             var url = atob(decodeURIComponent(urlEncoded));
             
-            return server.getDeck(url).then(function (deck) {                
-                return [components.Deck(deck), deck];
+            return server.getDeck(url).then(function (deck) { 
+                var data = {
+                    deck:deck,
+                    cards: []
+                };       
+                return [components.Deck(data), data];
             });
         },
         actions: {
+            loadCards: function () {
+                return server.getCards(this.deck.id).then(function (cards) {
+                    return this;
+                }.bind(this));
+            }
         }
     }], document.getElementById('app'), {
         'Home': '/',

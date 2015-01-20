@@ -39,8 +39,7 @@
         },
         action: function (name) {
             var args = Array.prototype.slice.call(arguments, 1);
-            args.unshift(euclid.rootProps);
-            Q(euclid.actions[name].apply(this, args)).then(function (newProps) {
+            Q(euclid.actions[name].apply(euclid.rootProps, args)).then(function (newProps) {
                 euclid.rootComponent.setProps(newProps);
             });
         },
