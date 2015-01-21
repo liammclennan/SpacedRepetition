@@ -130,14 +130,59 @@ define('components', ['euclid','urls'], function (euclid, urls) {
         notImplementedProps: {onClick:function () {alert('not implemented');}}
     }));
 
+    var Card = React.createFactory(React.createClass({
+        displayName: 'Card',
+        getInitialState: function () {
+            return {showingFront: true};
+        },
+        componentWillMount: function () {
+            Mousetrap.bind('space', this.clicked);
+            Mousetrap.bind('left', this.thumbsDown);
+            Mousetrap.bind('right', this.thumbsUp);
+        },
+        componentWillReceiveProps: function () {
+            this.setState(this.getInitialState());
+        },
+        render: function () {
+            return R.div({onClick: this.clicked}, 
+                R.div(null, 
+                    this.state.showingFront ? this.props.front : this.props.back),
+                    this.state.showingFront ? '' : R.div(null, 
+                        R.button({onClick: this.thumbsDown}, 'thumbs down'), 
+                        R.button({onClick: this.thumbsUp}, 'thumbs up')),
+                    R.div(null, 
+                        R.p(null, 'Keyboard shortcuts'), 
+                        R.ul(null, 
+                            R.li(null, 'Press space or click the card to flip it'),
+                            this.state.showingFront ? '' : R.li(null, 'Use the left arrow to indicate that the card is difficult'),
+                            this.state.showingFront ? '' : R.li(null, 'Use the right arrow to indicate that the card is easy')))
+            );
+        },
+        clicked: function () {
+            this.setState({showingFront: !this.state.showingFront});
+        },
+        thumbsDown: function () {
+            if (this.state.showingFront) return;
+            euclid.action('cardWasHard', this.props.id);
+        },
+        thumbsUp: function () {
+            if (this.state.showingFront) return;
+            euclid.action('cardWasEasy', this.props.id);
+        },
+        componentWillUnmount: function () {
+            Mousetrap.reset();
+        }
+    }));
+
     var Study = React.createFactory(React.createClass({
+        displayName: 'Study',
         propTypes: {
+            index: React.PropTypes.number.isRequired,
             cards: React.PropTypes.array.isRequired
         },
         render: function () {
-            return R.div(null, this.props.cards.map(function (cardWithDue) {
-                return R.p(null, cardWithDue.front);
-            }));
+            var card = this.props.cards[this.props.index];
+            return R.div(null, Card(card));
         }
     }));
 

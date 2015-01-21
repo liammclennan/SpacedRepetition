@@ -15,7 +15,7 @@
             importWiki: function (url) {
                 var props = this;
                 return server.importGitWiki(url).then(function () {
-                    euclid.navigate('/deck/' + encodeURIComponent(btoa(url)));
+                    euclid.navigate('Deck', {url: encodeURIComponent(btoa(url))});
                     return props;
                 });
             }
@@ -28,7 +28,8 @@
             return server.getDeck(url).then(function (deck) { 
                 var data = {
                     deck:deck,
-                    cards: []
+                    cards: [],
+                    deckUrlEncoded: urlEncoded
                 };       
                 return [components.Deck(data), data];
             });
@@ -41,25 +42,47 @@
                 }.bind(this));
             },
             study: function (deckId) {
-                euclid.navigate('Deck/Study', {deckId:deckId});
+                euclid.navigate('Deck/Study', {deckId:deckId,urlEncoded:this.deckUrlEncoded});
                 return this;
             }
         }
     }, {
         title: 'Study',
         state: 'Deck/Study',
-        entry: function (deckId) {
+        entry: function (deckId, urlEncoded) {
             var data = {};
             return server.getCards(deckId).then(function (cards) {
                 data.cards = cards;
+                data.deckId = deckId;
+                data.index = 0;
+                data.urlEncoded = urlEncoded;
                 return [components.Study(data), data];
             });
         },
-        actions: {}
+        actions: {
+            cardWasHard: function (cardId) {
+                // todo: submit result to server
+                if (this.index + 1 == this.cards.length) {
+                    // todo: display a toast
+                    euclid.navigate('Deck', {url: this.urlEncoded});
+                }
+                this.index = this.index + 1;
+                return this;
+            },
+            cardWasEasy: function (cardId) {
+                // todo: submit result to server
+                if (this.index + 1 == this.cards.length) {
+                    // todo: display a toast
+                    euclid.navigate('Deck', {url: this.urlEncoded});
+                }
+                this.index = this.index + 1;
+                return this;
+            }
+        }
     }], document.getElementById('app'), {
         'Home': '/',
         'Deck': '/deck/:url',
-        'Deck/Study': '/deck/study/:deckId'
+        'Deck/Study': '/deck/study/:deckId/:urlEncoded'
     });
 });
 

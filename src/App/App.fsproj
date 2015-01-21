@@ -61,6 +61,7 @@
     <Content Include="packages.config" />
     <Compile Include="FileSource.fs" />
     <Compile Include="Parser.fs" />
+    <Compile Include="SpacedRepetition.fs" />
     <Compile Include="UseCases.fs" />
     <Content Include="app.config" />
   </ItemGroup>

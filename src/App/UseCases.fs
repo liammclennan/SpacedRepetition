@@ -1,15 +1,27 @@
 module UseCases
 open Parser
 open PostgresDoc.Doc
+open SpacedRepetition
 
-type Card = { id:System.Guid; front: string; back: string; created: System.DateTime; deckId: System.Guid }
-type Deck = { id:System.Guid; name: string; sourceUrl: string }
-type StudyLog = { id: System.Guid; ``when``: System.DateTime; correct: bool; cardId: System.Guid }
 type UseCaseResult<'a> = 
     | Success of 'a
     | Error of string
 
 let private store = { connString = System.Configuration.ConfigurationManager.ConnectionStrings.["db"].ConnectionString }
+
+let cardsForStudy deckId =
+    let allCards = 
+        ["deckId", box deckId]
+        |> query<Card> store "select data from card where data->>'deckId' = :deckId;"
+    let studyLogs =
+        ["deckId", box deckId]
+        |> query<StudyLog> store "
+select data from studylog
+where CAST(data->>'cardId' as uuid) in (
+	select id from card where data->>'deckId' = :deckId
+)"
+    SpacedRepetition.selectForStudy allCards studyLogs System.DateTime.Now
+        |> Success    
 
 let listDecks = 
     query<Deck> store "select data from deck;" []
