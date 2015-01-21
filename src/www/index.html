@@ -3,7 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title></title>
+    <title>Study Notes</title>
+    <link href="Content/css/nih/toastr.min.css" rel="stylesheet"/>
+    <link href="Content/css/nih/nprogress.css" rel="stylesheet"/>
 </head>
 <body>
     <div class="container">
@@ -26,12 +28,28 @@
     <script src="Content/js-nih/director.min.js"></script>
     <script src="Content/js-nih/mousetrap.min.js"></script>
     <script src="Content/js-nih/fermat.js"></script>
+    <script src="Content/js-nih/toastr.min.js"></script>
+    <script src="Content/js-nih/nprogress.js"></script>
     <script src="Content/js/server.js"></script>
     <script src="Content/js/urls.js"></script>
     <script src="Content/js/components.js"></script>
     <script src="Content/js/app.js"></script>
     <script>
-        (function () { require('app'); })();
+        (function () { 
+            $(document).ajaxStart(function() {
+                NProgress.start();
+            });
+            $(document).ajaxStop(function() {
+                NProgress.done();
+            });
+            $( document ).ajaxError(function(e, jqxhr, settings, thrownError) {
+                toastr.error('An error occurred during communication with the server');
+            });
+            window.onerror = function(msg, url, line, col, error) {
+               toastr.error(msg, 'An error occurred'); 
+            };
+            require('app');
+         })();
     </script>
 </body>
 </html>
