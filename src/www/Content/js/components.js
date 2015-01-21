@@ -103,6 +103,14 @@ define('components', ['euclid','urls'], function (euclid, urls) {
         mixins: [formMixin]
     }));
 
+    var AsycContent = React.createFactory(React.createClass({
+        render: function () {
+            return _.isEqual(["children"], Object.keys(this.props)) 
+                ? R.span(null,'...') 
+                : R.span(null, this.props.children);
+        }
+    }));
+
     var Deck = React.createFactory(React.createClass({
         componentWillMount: function () {
             euclid.action('loadCards');
@@ -110,14 +118,32 @@ define('components', ['euclid','urls'], function (euclid, urls) {
         render: function () {
             return R.div(null, 
                 R.h1(null, this.props.deck.name),
-                R.button({onClick:function () {alert('not implemented');}}, 'Sync Now'),
+                R.button(this.notImplementedProps, 'Sync Now'),
                 R.p(null, this.props.deck.sourceUrl),
-                'Total cards ' + this.props.cards.length);
+                R.div(null, AsycContent(this.props.cards, 'Total cards ' + this.props.cards.length)),
+                R.div(null, 
+                    R.button({onClick: euclid.action.bind(euclid, 'study', this.props.deck.id)}, 'Study Now'), 
+                    R.button({onClick:function () {alert('not implemented');}}, 'View Wiki')
+                )
+            );
+        },
+        notImplementedProps: {onClick:function () {alert('not implemented');}}
+    }));
+
+    var Study = React.createFactory(React.createClass({
+        propTypes: {
+            cards: React.PropTypes.array.isRequired
+        },
+        render: function () {
+            return R.div(null, this.props.cards.map(function (cardWithDue) {
+                return R.p(null, cardWithDue.front);
+            }));
         }
     }));
 
     return {
         Home: Home,
-        Deck: Deck
+        Deck: Deck,
+        Study: Study
     };
 });

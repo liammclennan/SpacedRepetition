@@ -2,8 +2,9 @@ module UseCases
 open Parser
 open PostgresDoc.Doc
 
-type Card = { id:System.Guid; front: string; back: string; due: System.DateTime; imported: System.DateTime; deckId: System.Guid}
+type Card = { id:System.Guid; front: string; back: string; created: System.DateTime; deckId: System.Guid }
 type Deck = { id:System.Guid; name: string; sourceUrl: string }
+type StudyLog = { id: System.Guid; ``when``: System.DateTime; correct: bool; cardId: System.Guid }
 type UseCaseResult<'a> = 
     | Success of 'a
     | Error of string
@@ -32,7 +33,7 @@ let import url =
                 |> List.map (fun (path,content) -> content)
                 |> List.map Parser.parse
                 |> List.concat
-                |> List.map (fun (q,a) -> { id = System.Guid.NewGuid(); front = q; back = a; due = System.DateTime.Now; imported = System.DateTime.Now; deckId = deckId})
+                |> List.map (fun (q,a) -> { id = System.Guid.NewGuid(); front = q; back = a; created = System.DateTime.Now; deckId = deckId})
                 |> List.map (fun card -> insert card.id card))) 
     commit store uow
     ()

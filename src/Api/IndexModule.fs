@@ -20,6 +20,7 @@ type IndexModule() as x =
         x.Response.AsJson(UseCases.listDecks, HttpStatusCode.OK) |> box
     
     do x.Get.["/cards/{deckid}"] <- fun parameters ->
+        System.Threading.Thread.Sleep(2000)
         let deckId = (parameters :?> Nancy.DynamicDictionary).["deckid"] |> string
         let deck = deckId |> UseCases.viewCardsByDeck
         match deck with

@@ -39,11 +39,27 @@
                     this.cards = cards;
                     return this;
                 }.bind(this));
+            },
+            study: function (deckId) {
+                euclid.navigate('Deck/Study', {deckId:deckId});
+                return this;
             }
         }
+    }, {
+        title: 'Study',
+        state: 'Deck/Study',
+        entry: function (deckId) {
+            var data = {};
+            return server.getCards(deckId).then(function (cards) {
+                data.cards = cards;
+                return [components.Study(data), data];
+            });
+        },
+        actions: {}
     }], document.getElementById('app'), {
         'Home': '/',
-        'Deck': '/deck/:url'
+        'Deck': '/deck/:url',
+        'Deck/Study': '/deck/study/:deckId'
     });
 });
 
