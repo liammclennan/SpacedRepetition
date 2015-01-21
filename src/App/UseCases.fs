@@ -4,13 +4,21 @@ open PostgresDoc.Doc
 
 type Card = { id:System.Guid; front: string; back: string; due: System.DateTime; imported: System.DateTime; deckId: System.Guid}
 type Deck = { id:System.Guid; name: string; sourceUrl: string }
+type UseCaseResult<'a> = 
+    | Success of 'a
+    | Error of string
 
 let private store = { connString = System.Configuration.ConfigurationManager.ConnectionStrings.["db"].ConnectionString }
 
 let listDecks = 
     query<Deck> store "select data from deck;" []
 
-let viewDeck url =
+let viewCardsByDeck id =
+    ["deckId", box id]
+    |> query<Card> store "select data from card where data->>'deckId' = :deckId;"
+    |> Success
+
+let viewDeckByUrl url =
     ["sourceUrl", box url]
     |> query<Deck> store "select data from deck where data->>'sourceUrl' = :sourceUrl;"
     |> (fun a -> Array.sub a 0 1)

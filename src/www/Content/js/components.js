@@ -110,8 +110,9 @@ define('components', ['euclid','urls'], function (euclid, urls) {
         render: function () {
             return R.div(null, 
                 R.h1(null, this.props.deck.name),
-                R.button(null, 'Sync Now'),
-                R.p(null, this.props.deck.sourceUrl));
+                R.button({onClick:function () {alert('not implemented');}}, 'Sync Now'),
+                R.p(null, this.props.deck.sourceUrl),
+                'Total cards ' + this.props.cards.length);
         }
     }));
 

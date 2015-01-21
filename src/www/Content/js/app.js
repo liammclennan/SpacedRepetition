@@ -36,6 +36,7 @@
         actions: {
             loadCards: function () {
                 return server.getCards(this.deck.id).then(function (cards) {
+                    this.cards = cards;
                     return this;
                 }.bind(this));
             }

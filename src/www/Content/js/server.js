@@ -1,5 +1,8 @@
-﻿define('server', [], function () {
+﻿define('server', ['fermat'], function (fermat) {
     var appUrl = 'http://localhost:11285';
+    var serverStates = fermat({
+        Cards: appUrl + '/cards/:deckId'
+    });
 
     return {
         importGitWiki: function (url) {
@@ -27,8 +30,8 @@
             ));
         },
         getCards: function (deckId) {
-            console.log(deckId);
-            return Q([]);
+            return doAjaxWithErrorHandler($.ajax(
+                serverStates('Cards', {deckId: deckId})));
         }
     };
 

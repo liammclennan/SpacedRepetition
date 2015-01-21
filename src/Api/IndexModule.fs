@@ -19,10 +19,17 @@ type IndexModule() as x =
     do x.Get.["/decks"] <- fun _ ->
         x.Response.AsJson(UseCases.listDecks, HttpStatusCode.OK) |> box
     
+    do x.Get.["/cards/{deckid}"] <- fun parameters ->
+        let deckId = (parameters :?> Nancy.DynamicDictionary).["deckid"] |> string
+        let deck = deckId |> UseCases.viewCardsByDeck
+        match deck with
+            | UseCases.Success cs -> x.Response.AsJson(cs, HttpStatusCode.OK) |> box
+            | UseCases.Error e -> x.Response.AsJson("", HttpStatusCode.InternalServerError) |> box
+
     do x.Get.["/deck"] <- fun _ ->
         let url = (x.Request.Query :?> Nancy.DynamicDictionary).["url"] 
                     |> string
-        let deck = url |> UseCases.viewDeck
+        let deck = url |> UseCases.viewDeckByUrl
         if Array.isEmpty deck then            
             box HttpStatusCode.NotFound
         else
