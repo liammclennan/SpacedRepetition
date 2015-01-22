@@ -26,6 +26,17 @@ type IndexModule() as x =
             | UseCases.Success cs -> x.Response.AsJson(cs, HttpStatusCode.OK) |> box
             | UseCases.Error e -> x.Response.AsJson("", HttpStatusCode.InternalServerError) |> box
 
+    do x.Post.["/card/{cardId}/result/{result}"] <- fun p ->
+        let (cardId, result) = 
+            (p :?> Nancy.DynamicDictionary) 
+            |> (fun dd -> 
+                (new System.Guid(string dd.["cardId"]), string dd.["result"]))
+        UseCases.persistResult cardId (match result with
+                                        | s when s = "hard" -> SpacedRepetition.Hard
+                                        | s when s = "easy" -> SpacedRepetition.Easy
+                                        | _ -> failwith ("unknown result " + result))
+        box HttpStatusCode.OK
+
     do x.Get.["/deck"] <- fun _ ->
         let url = (x.Request.Query :?> Nancy.DynamicDictionary).["url"] 
                     |> string

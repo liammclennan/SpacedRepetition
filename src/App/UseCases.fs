@@ -9,6 +9,11 @@ type UseCaseResult<'a> =
 
 let private store = { connString = System.Configuration.ConfigurationManager.ConnectionStrings.["db"].ConnectionString }
 
+let persistResult cardId (result:CardResult) =
+    let logId = System.Guid.NewGuid()
+    [insert logId {id = logId; ``when`` = System.DateTime.Now; result = result; cardId = cardId}]
+    |> commit store    
+
 let cardsForStudy deckId =
     let allCards = 
         ["deckId", box deckId]

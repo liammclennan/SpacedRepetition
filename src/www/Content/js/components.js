@@ -189,11 +189,7 @@ define('components', ['euclid','urls'], function (euclid, urls) {
             return R.div({className:'row'}, 
                     R.div({className: 'col-md-6 col-md-offset-3'}, 
                         R.section(null, Card(card))))
-
-
                 ;
-            // return R.section(null, 
-            //     R.row(null, R.div({className:'col-md-6 col-md-offset-3'}), Card(card)));
         }
     }));
 

@@ -59,26 +59,28 @@
                 return [components.Study(data), data];
             });
         },
-        actions: {
-            cardWasHard: function (cardId) {
-                // todo: submit result to server
+        actions: (function () {
+            function incrementIndex() {
                 if (this.index + 1 == this.cards.length) {
-                    // todo: display a toast
+                    toastr.info('Deck finished');
                     euclid.navigate('Deck', {url: this.urlEncoded});
                 }
                 this.index = this.index + 1;
-                return this;
-            },
-            cardWasEasy: function (cardId) {
-                // todo: submit result to server
-                if (this.index + 1 == this.cards.length) {
-                    // todo: display a toast
-                    euclid.navigate('Deck', {url: this.urlEncoded});
-                }
-                this.index = this.index + 1;
-                return this;
             }
-        }
+
+            return {
+                cardWasHard: function (cardId) {
+                    server.submitHardResult(cardId);
+                    incrementIndex.call(this);
+                    return this;
+                },
+                cardWasEasy: function (cardId) {
+                    server.submitEasyResult(cardId);
+                    incrementIndex.call(this);
+                    return this;
+                }
+            };
+        })() 
     }], document.getElementById('app'), {
         'Home': '/',
         'Deck': '/deck/:url',
