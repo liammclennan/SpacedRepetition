@@ -63,7 +63,7 @@ define('components', ['euclid','urls'], function (euclid, urls) {
             sourceUrl: React.PropTypes.string.isRequired
         },
         render: function () {
-            return R.li(null, R.a({href: '#' + euclid.state('Deck', {url: urls.encodeForPath(this.props.sourceUrl)})}, this.props.name));
+            return R.td(null, R.a({href: '#' + euclid.state('Deck', {url: urls.encodeForPath(this.props.sourceUrl)})}, this.props.name));
         }
     }));
 
@@ -76,20 +76,17 @@ define('components', ['euclid','urls'], function (euclid, urls) {
             decks: React.PropTypes.array.isRequired
         },
         render: function () {
-            return React.DOM.div(
-                null,
+            return R.section(
+                {className:'text-center'},
+                R.h2({ className:""}, 'Wikis'),
+                R.hr({className:'star-primary'}),
                 R.form({ className: 'form-inline', onSubmit: this.import },
                     R.div({ className: 'form-group' },
                         R.input({ type: 'text', className: 'form-control', placeholder: 'wiki git url', value: this.state.importUrl, onChange: this.bindToState('importUrl') }),
-                        R.button(null, 'Import Wiki'))),
-                R.div(null, 'or'),
-                R.form({ className: 'form-inline' },
-                    R.div({ className: 'form-group' },
-                        R.input({ type: 'text', className: 'form-control', placeholder: 'wiki name' }),
-                        R.button(null, 'Return to Wiki'))),
-                R.div(null, 
-                    R.h2(null, 'Wikis'),
-                    R.ul(null, this.props.decks.map(function (deck) {
+                        R.button({className: 'btn btn-default'}, 'Import Wiki'))),
+                
+                R.table({className:'table table-striped',style: {'marginTop': '30'}}, 
+                    R.tr(null, this.props.decks.map(function (deck) {
                         deck.key = deck.id;
                         return DeckListItem(deck);
                     }))
@@ -116,18 +113,19 @@ define('components', ['euclid','urls'], function (euclid, urls) {
             euclid.action('loadCards');
         },
         render: function () {
-            return R.div(null, 
-                R.h1(null, this.props.deck.name),
+            return R.section(null, 
+                R.h3(null, this.props.deck.name),
                 R.button(this.notImplementedProps, 'Sync Now'),
                 R.p(null, this.props.deck.sourceUrl),
                 R.div(null, AsycContent(this.props.cards, 'Total cards ' + this.props.cards.length)),
                 R.div(null, 
-                    R.button({onClick: euclid.action.bind(euclid, 'study', this.props.deck.id)}, 'Study Now'), 
-                    R.button({onClick:function () {alert('not implemented');}}, 'View Wiki')
+                    R.button({onClick: euclid.action.bind(euclid, 'study', this.props.deck.id), className:'btn btn-primary'}, 'Study Now'),
+                    R.span(null, ' '), 
+                    R.button({onClick:function () {alert('not implemented');}, className:'btn btn-default'}, 'View Wiki')
                 )
             );
         },
-        notImplementedProps: {onClick:function () {alert('not implemented');}}
+        notImplementedProps: {onClick:function () {alert('not implemented');}, className: 'btn btn-default'}
     }));
 
     var Card = React.createFactory(React.createClass({
@@ -144,18 +142,24 @@ define('components', ['euclid','urls'], function (euclid, urls) {
             this.setState(this.getInitialState());
         },
         render: function () {
-            return R.div({onClick: this.clicked}, 
+            return R.div(null, 
+                
+                R.div({onClick: this.clicked, className:'card'}, 
+                    R.div({className:'card-inner' + (this.state.showingFront ? '' : ' card-flip')},
+                        R.div({className: 'card-inner-inner front'}, this.props.front),
+                        R.div({className: 'card-inner-inner back'}, this.props.back + "It is surprisingly good. Can I use... is always great for checking out the details there. On desktop the concerns would be it's IE 9+, Safari 6+, and won't be in Opera until it is on Blink in 15+. On mobile, Android and Opera Mini don't support it at all yet and iOS just on 6.0+.")
+                    )),
+
+                R.div({className:'row'}, 
+                    R.div({style:{visibility: this.state.showingFront ? 'hidden' : 'visible', padding: '15' }}, 
+                        R.button({onClick: this.thumbsDown, className:'pull-left'}, 'thumbs down'), 
+                        R.button({onClick: this.thumbsUp, className:'pull-right'}, 'thumbs up'))),
                 R.div(null, 
-                    this.state.showingFront ? this.props.front : this.props.back),
-                    this.state.showingFront ? '' : R.div(null, 
-                        R.button({onClick: this.thumbsDown}, 'thumbs down'), 
-                        R.button({onClick: this.thumbsUp}, 'thumbs up')),
-                    R.div(null, 
-                        R.p(null, 'Keyboard shortcuts'), 
-                        R.ul(null, 
-                            R.li(null, 'Press space or click the card to flip it'),
-                            this.state.showingFront ? '' : R.li(null, 'Use the left arrow to indicate that the card is difficult'),
-                            this.state.showingFront ? '' : R.li(null, 'Use the right arrow to indicate that the card is easy')))
+                    R.p(null, 'Keyboard shortcuts'), 
+                    R.ul(null, 
+                        R.li(null, 'space to flip'),
+                        this.state.showingFront ? '' : R.li(null, 'left arrow = difficult'),
+                        this.state.showingFront ? '' : R.li(null, 'right arrow = easy')))
             );
         },
         clicked: function () {
@@ -182,7 +186,14 @@ define('components', ['euclid','urls'], function (euclid, urls) {
         },
         render: function () {
             var card = this.props.cards[this.props.index];
-            return R.div(null, Card(card));
+            return R.div({className:'row'}, 
+                    R.div({className: 'col-md-6 col-md-offset-3'}, 
+                        R.section(null, Card(card))))
+
+
+                ;
+            // return R.section(null, 
+            //     R.row(null, R.div({className:'col-md-6 col-md-offset-3'}), Card(card)));
         }
     }));
 
