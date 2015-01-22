@@ -152,8 +152,8 @@ define('components', ['euclid','urls'], function (euclid, urls) {
 
                 R.div({className:'row'}, 
                     R.div({style:{visibility: this.state.showingFront ? 'hidden' : 'visible', padding: '15' }}, 
-                        R.button({onClick: this.thumbsDown, className:'pull-left'}, 'thumbs down'), 
-                        R.button({onClick: this.thumbsUp, className:'pull-right'}, 'thumbs up'))),
+                        R.button({onClick: this.thumbsDown, type:'button', className:'btn btn-danger btn-lg pull-left'}, R.span({className:'glyphicon glyphicon-thumbs-down'})),
+                        R.button({onClick: this.thumbsUp, type:'button', className:'btn btn-success btn-lg pull-right'}, R.span({className:'glyphicon glyphicon-thumbs-up'})))),
                 R.div(null, 
                     R.p(null, 'Keyboard shortcuts'), 
                     R.ul(null, 
