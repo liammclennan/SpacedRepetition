@@ -146,8 +146,8 @@ define('components', ['euclid','urls'], function (euclid, urls) {
                 
                 R.div({onClick: this.clicked, className:'card'}, 
                     R.div({className:'card-inner' + (this.state.showingFront ? '' : ' card-flip')},
-                        R.div({className: 'card-inner-inner front'}, this.props.front),
-                        R.div({className: 'card-inner-inner back'}, this.props.back + "It is surprisingly good. Can I use... is always great for checking out the details there. On desktop the concerns would be it's IE 9+, Safari 6+, and won't be in Opera until it is on Blink in 15+. On mobile, Android and Opera Mini don't support it at all yet and iOS just on 6.0+.")
+                        this.state.showingFront ? R.div({className: 'card-inner-inner front'}, this.props.front) : '',
+                        this.state.showingFront ? '' : R.div({className: 'card-inner-inner back'}, this.props.back + "It is surprisingly good. Can I use... is always great for checking out the details there. On desktop the concerns would be it's IE 9+, Safari 6+, and won't be in Opera until it is on Blink in 15+. On mobile, Android and Opera Mini don't support it at all yet and iOS just on 6.0+.")
                     )),
 
                 R.div({className:'row'}, 
