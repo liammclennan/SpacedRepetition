@@ -50,6 +50,7 @@ Ankh.NoLoad
 !/packages/*/lib/*.pdb
 !/packages/*/lib/*/*.dll
 !/packages/*/lib/*/*.pdb
+!src/packages/**/*.*
 
 temp/
 data.csv
