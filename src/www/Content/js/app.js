@@ -56,6 +56,10 @@
                 data.deckId = deckId;
                 data.index = 0;
                 data.urlEncoded = urlEncoded;
+                if (cards.length == 0) {
+                    euclid.navigate('Deck', {url: urlEncoded}, 'There are no cards due');
+                    return [components.Study(data), data];
+                }
                 return [components.Study(data), data];
             });
         },

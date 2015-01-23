@@ -43,7 +43,10 @@
                 euclid.rootComponent.setProps(newProps);
             });
         },
-        navigate: function (state, components) {
+        navigate: function (state, components, message) {
+            if (message) {
+                toastr.info(message);
+            }
             window.location.hash = this.state(state, components);
         }
     };

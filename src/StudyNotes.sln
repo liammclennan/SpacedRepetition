@@ -7,6 +7,13 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Api", "Api\Api.fsproj", "{F
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "App", "App\App.fsproj", "{2CDDED10-BF62-4602-B0AF-FA6BBCDC7184}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Tests", "Tests\Tests.fsproj", "{2F785BEC-DACC-4B9B-8B94-813A459CF2EF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5A5AB377-2D1E-4618-B33B-78FE6A00CA52}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +28,10 @@ Global
 		{2CDDED10-BF62-4602-B0AF-FA6BBCDC7184}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CDDED10-BF62-4602-B0AF-FA6BBCDC7184}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CDDED10-BF62-4602-B0AF-FA6BBCDC7184}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F785BEC-DACC-4B9B-8B94-813A459CF2EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F785BEC-DACC-4B9B-8B94-813A459CF2EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F785BEC-DACC-4B9B-8B94-813A459CF2EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F785BEC-DACC-4B9B-8B94-813A459CF2EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

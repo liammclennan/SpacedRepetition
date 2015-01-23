@@ -185,10 +185,12 @@ define('components', ['euclid','urls'], function (euclid, urls) {
             cards: React.PropTypes.array.isRequired
         },
         render: function () {
-            var card = this.props.cards[this.props.index];
             return R.div({className:'row'}, 
                     R.div({className: 'col-md-6 col-md-offset-3'}, 
-                        R.section(null, Card(card))))
+                        R.section(null, 
+                            this.props.cards.length 
+                            ? Card(this.props.cards[this.props.index])
+                            : 'No cards')))
                 ;
         }
     }));
