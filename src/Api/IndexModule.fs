@@ -16,6 +16,9 @@ type IndexModule() as x =
         UseCases.import model.url
         x.Response.AsText(model.url) |> box
 
+    do x.Post.["/other"] <- fun _ ->
+        box "meowww"
+
     do x.Get.["/decks"] <- fun _ ->
         x.Response.AsJson(UseCases.listDecks, HttpStatusCode.OK) |> box
     
