@@ -10,7 +10,7 @@ type Bootstrapper() =
 
     override this.ConfigureConventions(conventions: NancyConventions) =
         base.ConfigureConventions(conventions)
-        conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("/", "www", "html","css","png","js","woff","ttf"))
+        conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("/", "www"))
 
     override this.RequestStartup(container, pipelines:IPipelines, context) = 
         pipelines.AfterRequest.AddItemToEndOfPipeline(
