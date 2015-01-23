@@ -1,5 +1,5 @@
 ﻿define('server', ['fermat'], function (fermat) {
-    var appUrl = 'http://localhost:11285';
+    var appUrl = window.location.host.indexOf("localhost") > -1 ? 'http://localhost:11285' : 'http://studynotesapi.azurewebsites.net';
     var serverStates = fermat({
         Cards: appUrl + '/cards/:deckId',
         'Card/Result': appUrl + '/card/:cardId/result/:result'
