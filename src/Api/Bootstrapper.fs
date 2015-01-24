@@ -19,7 +19,7 @@ type Bootstrapper() =
 //        let file = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "log-{Date}.txt")
 //        let log = (new LoggerConfiguration()).WriteTo.RollingFile(file).CreateLogger()
 //        
-        pipelines.OnError.AddItemToEndOfPipeline(fun ctx ex -> 
+        pipelines.OnError.AddItemToEndOfPipeline(fun (ctx:NancyContext) ex -> 
                                                     (*log.Error("Unhandled exception {@ex}", ex);*) ctx.Response)
      
         pipelines.AfterRequest.AddItemToEndOfPipeline(
