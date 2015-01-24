@@ -12,9 +12,12 @@ type IndexModule() as x =
     inherit NancyModule()
     
     do x.Post.["/import"] <- fun _ ->
-        let model = x.Bind<Url>()
-        UseCases.import model.url
-        x.Response.AsText(model.url) |> box
+        try 
+            let model = x.Bind<Url>()
+            UseCases.import model.url
+            x.Response.AsText(model.url) |> box
+        with 
+            | :? System.Exception as ex -> x.Response.AsText("gaahh!!" + ex.Message) |> box
 
     do x.Post.["/other"] <- fun _ ->
         box "meowww"

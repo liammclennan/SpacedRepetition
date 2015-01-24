@@ -1,9 +1,12 @@
 ﻿namespace StudyNotes
 
+open System.IO
 open Nancy
 open Nancy.TinyIoc
 open Nancy.Bootstrapper
 open Nancy.Conventions
+open Serilog
+open Nancy.Responses
 
 type Bootstrapper() =
     inherit DefaultNancyBootstrapper()
@@ -12,7 +15,13 @@ type Bootstrapper() =
         base.ConfigureConventions(conventions)
         conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("/", "www"))
 
-    override this.RequestStartup(container, pipelines:IPipelines, context) = 
+    override this.RequestStartup(container, pipelines:IPipelines, context) =
+//        let file = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "log-{Date}.txt")
+//        let log = (new LoggerConfiguration()).WriteTo.RollingFile(file).CreateLogger()
+//        
+        pipelines.OnError.AddItemToEndOfPipeline(fun ctx ex -> 
+                                                    (*log.Error("Unhandled exception {@ex}", ex);*) ctx.Response)
+     
         pipelines.AfterRequest.AddItemToEndOfPipeline(
             fun (ctx:NancyContext) -> 
                 ctx.Response
