@@ -18,9 +18,9 @@ let rec private deleteDirectory path =
 // Idempotently deep clone a git repo to a 
 // hash of the repo url
 let fetch url = 
-    let urlHash = url.GetHashCode() |> string    
+    let urlHash = url.GetHashCode() |> string
     let repoDir = 
-        Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "temp", urlHash)
+        Path.Combine(System.IO.Path.GetTempPath(), urlHash)
     if Directory.Exists(repoDir) then deleteDirectory repoDir
     // todo: handle LibGit2SharpException (e.g. 401 unauthorized)
     Repository.Clone(
