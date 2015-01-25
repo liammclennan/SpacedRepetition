@@ -10,6 +10,9 @@ type Url = {url:string}
 
 type IndexModule() as x =
     inherit NancyModule()
+
+    do x.Get.["/"] <- fun _ ->
+        x.Response.AsRedirect("index.html") |> box
     
     do x.Post.["/import"] <- fun _ ->
         try 

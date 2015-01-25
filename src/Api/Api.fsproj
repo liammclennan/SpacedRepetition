@@ -67,6 +67,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="packages.config" />
+    <Content Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
@@ -75,11 +76,11 @@
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="Nancy">
-      <HintPath>..\packages\Nancy.0.17.1\lib\net40\Nancy.dll</HintPath>
+      <HintPath>..\packages\Nancy.1.0.0\lib\net40\Nancy.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Nancy.Hosting.Aspnet">
-      <HintPath>..\packages\Nancy.Hosting.Aspnet.0.17.1\lib\net40\Nancy.Hosting.Aspnet.dll</HintPath>
+      <HintPath>..\packages\Nancy.Hosting.Aspnet.1.0.0\lib\net40\Nancy.Hosting.Aspnet.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Serilog">
