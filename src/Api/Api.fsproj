@@ -77,8 +77,8 @@
       <HintPath>..\packages\Nancy.1.0.0\lib\net40\Nancy.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Nancy.Authentication.Token">
-      <HintPath>..\packages\Nancy.Authentication.Token.1.0.0\lib\net40\Nancy.Authentication.Token.dll</HintPath>
+    <Reference Include="Nancy.Authentication.Forms">
+      <HintPath>..\packages\Nancy.Authentication.Forms.1.0.0\lib\net40\Nancy.Authentication.Forms.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Nancy.Hosting.Aspnet">
@@ -104,11 +104,6 @@
     <ProjectReference Include="..\App\App.fsproj">
       <Name>App</Name>
       <Project>{2cdded10-bf62-4602-b0af-fa6bbcdc7184}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\Tokenizer\Tokenizer.csproj">
-      <Name>Tokenizer</Name>
-      <Project>{b67d7100-c6d3-4164-97c0-9814de25919a}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>

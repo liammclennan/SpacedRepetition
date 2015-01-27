@@ -3,14 +3,14 @@
 open System
 open Nancy
 open Nancy.ModelBinding
-open Nancy.Authentication.Token
 open Nancy.Security
+open Nancy.Authentication.Forms
 open HttpClient
 
 [<CLIMutable>]
 type AccessToken = {accessToken: string}
 
-type AuthModule(tokenizer: ITokenizer) as x =
+type AuthModule() as x =
     inherit NancyModule()
 
     do x.Post.["/auth"] <- fun _ ->
@@ -21,18 +21,18 @@ type AuthModule(tokenizer: ITokenizer) as x =
                         |> getResponse
                             
         if response.StatusCode = 200 then 
-            // todo validate response
-            let identity = {new IUserIdentity 
-                            with member this.UserName = response.EntityBody.Value
-                                 member this.Claims = seq {yield "admin"}}
-            let token = tokenizer.Tokenize(identity, x.Context)
-            token |> x.Response.AsText 
-            |> box
+            let email = response.EntityBody.Value
+            // todo : lookup user by email
+            // create user if they don't exist
+            
+            x.LoginWithoutRedirect(System.Guid.NewGuid(), new Nullable<System.DateTime>(System.DateTime.Now.AddDays(365.)))
+                |> box
         else
             HttpStatusCode.Unauthorized |> box
 
-    do x.Get.["/secure"] <- fun _ ->
+    do x.Get.["/user"] <- fun _ ->
         x.RequiresAuthentication()
-        x.Response.AsText("super secret") |> box
+        x.Context.CurrentUser.UserName
+            |> x.Response.AsText |> box
     
 

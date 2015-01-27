@@ -7,7 +7,16 @@ open Nancy.Bootstrapper
 open Nancy.Conventions
 open Serilog
 open Nancy.Responses
-open Nancy.Authentication.Token
+open Nancy.Authentication.Forms
+open Nancy.Security
+
+type UserMapper() =
+    interface IUserMapper with 
+        member this.GetUserFromIdentifier(identifier:System.Guid,context) = 
+            {new IUserIdentity 
+                            with member this.UserName = identifier.ToString()
+                                 member this.Claims = seq {yield "admin"}}
+
 
 type Bootstrapper() =
     inherit DefaultNancyBootstrapper()
@@ -20,8 +29,10 @@ type Bootstrapper() =
 //        let file = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "log-{Date}.txt")
 //        let log = (new LoggerConfiguration()).WriteTo.RollingFile(file).CreateLogger()
 //        
-
-        TokenAuthentication.Enable(pipelines, new TokenAuthenticationConfiguration(container.Resolve<ITokenizer>()))
+        let frmCfg = new FormsAuthenticationConfiguration()
+        frmCfg.UserMapper <- container.Resolve<IUserMapper>()
+        frmCfg.RedirectUrl <- "~/login"
+        FormsAuthentication.Enable(pipelines, frmCfg)
 
         pipelines.OnError.AddItemToEndOfPipeline(fun (ctx:NancyContext) ex -> 
                                                     (*log.Error("Unhandled exception {@ex}", ex);*) ctx.Response)
@@ -38,7 +49,7 @@ type Bootstrapper() =
         ()
 
     override this.ConfigureApplicationContainer(container: TinyIoCContainer) =
-        container.Register<ITokenizer>(new Tokenizer.LiamTokenizer()) |> ignore
+        container.Register<IUserMapper>(new UserMapper()) |> ignore
         ()
 
 
