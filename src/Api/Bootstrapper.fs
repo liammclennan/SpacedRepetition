@@ -30,7 +30,7 @@ type Bootstrapper() =
 //        
         let frmCfg = new FormsAuthenticationConfiguration()
         frmCfg.UserMapper <- container.Resolve<IUserMapper>()
-        frmCfg.RedirectUrl <- "~/login"
+        frmCfg.RedirectUrl <- "~/index.html#/login"
         FormsAuthentication.Enable(pipelines, frmCfg)
 
         pipelines.OnError.AddItemToEndOfPipeline(fun (ctx:NancyContext) ex -> 

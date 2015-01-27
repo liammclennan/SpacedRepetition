@@ -1,13 +1,12 @@
-define('auth', ['server'], function (server) {
-    var googleToken, authenticated = false;
+define('auth', ['server','euclid'], function (server,euclid) {
+    var googleToken;
 
     function authCallback(authResult) {
-      if (authenticated) return;  
       if (authResult['status']['signed_in']) {
         googleToken = authResult.access_token;
         server.authenticate(googleToken)
             .then(function () {
-                authenticated = true;
+                euclid.navigate('Home');
             })
             .catch(function (error) {console.error(err);});
       } else {

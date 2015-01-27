@@ -43,24 +43,28 @@ where CAST(data->>'cardId' as uuid) in (
     SpacedRepetition.selectForStudy allCards studyLogs System.DateTime.Now
         |> Success    
 
-let listDecks = 
-    query<Deck> store "select data from deck;" []
+let listDecks (userId:System.Guid) = 
+    ["userId", box userId]
+    |> query<Deck> store "select data from deck where data->>'userId' = :userId;"
 
 let viewCardsByDeck id =
     ["deckId", box id]
     |> query<Card> store "select data from card where data->>'deckId' = :deckId;"
     |> Success
 
-let viewDeckByUrl url =
-    ["sourceUrl", box url]
-    |> query<Deck> store "select data from deck where data->>'sourceUrl' = :sourceUrl;"
+let viewDeckByUrl url (userId:System.Guid) =
+    [
+        "sourceUrl", box url
+        "userId", box userId
+    ]
+    |> query<Deck> store "select data from deck where data->>'userId' = :userId and data->>'sourceUrl' = :sourceUrl;"
     |> (fun a -> Array.sub a 0 1)
 
-let import url = 
+let import url (userId:System.Guid) = 
     let repoDir = Git.fetch url
     let pathToFiles = FileSource.getMdFiles repoDir
     let deckId = System.Guid.NewGuid()
-    let uow = (insert deckId {id = deckId; name = url; sourceUrl = url} :: (pathToFiles
+    let uow = (insert deckId {id = deckId; name = url; sourceUrl = url; userId = userId} :: (pathToFiles
                 |> Map.toList
                 |> List.map (fun (path,content) -> content)
                 |> List.map Parser.parse

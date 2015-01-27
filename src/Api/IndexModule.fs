@@ -11,18 +11,21 @@ type Url = {url:string}
 type IndexModule() as x =
     inherit NancyModule()
 
+    let userId() = new Guid(x.Context.CurrentUser.UserName)
+
     do x.Get.["/"] <- fun _ ->
+        x.RequiresAuthentication()
         x.Response.AsRedirect("index.html") |> box
     
     do x.Post.["/import"] <- fun _ ->
         x.RequiresAuthentication()
         let model = x.Bind<Url>()
-        UseCases.import model.url
+        UseCases.import model.url (userId())
         x.Response.AsText(model.url) |> box
 
     do x.Get.["/decks"] <- fun _ ->
         x.RequiresAuthentication()
-        x.Response.AsJson(UseCases.listDecks, HttpStatusCode.OK) |> box
+        x.Response.AsJson(UseCases.listDecks (userId()), HttpStatusCode.OK) |> box
     
     do x.Get.["/cards/{deckid}"] <- fun parameters ->
         x.RequiresAuthentication()
@@ -48,7 +51,7 @@ type IndexModule() as x =
         x.RequiresAuthentication()
         let url = (x.Request.Query :?> Nancy.DynamicDictionary).["url"] 
                     |> string
-        let deck = url |> UseCases.viewDeckByUrl
+        let deck = UseCases.viewDeckByUrl url (userId())
         if Array.isEmpty deck then            
             box HttpStatusCode.NotFound
         else
