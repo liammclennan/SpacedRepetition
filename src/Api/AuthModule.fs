@@ -22,10 +22,8 @@ type AuthModule() as x =
                             
         if response.StatusCode = 200 then 
             let email = response.EntityBody.Value
-            // todo : lookup user by email
-            // create user if they don't exist
-            
-            x.LoginWithoutRedirect(System.Guid.NewGuid(), new Nullable<System.DateTime>(System.DateTime.Now.AddDays(365.)))
+            let user =  UseCases.getOrCreateUser email
+            x.LoginWithoutRedirect(user.id, new Nullable<System.DateTime>(System.DateTime.Now.AddDays(365.)))
                 |> box
         else
             HttpStatusCode.Unauthorized |> box

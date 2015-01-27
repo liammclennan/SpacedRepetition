@@ -5,6 +5,7 @@ type DueCard = {card: Card; sequence: int}
 type Deck = { id:System.Guid; name: string; sourceUrl: string }
 type CardResult = Easy | Hard
 type StudyLog = { id: System.Guid; ``when``: System.DateTime; result: CardResult; cardId: System.Guid }
+type User = {id: System.Guid; email: string}
 
 // EF' = EF+(0.1-(5-q)*(0.08+(5-q)*0.02))
 let eFModifier ef result =

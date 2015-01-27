@@ -9,6 +9,21 @@ type UseCaseResult<'a> =
 
 let private store = { connString = System.Configuration.ConfigurationManager.ConnectionStrings.["db"].ConnectionString }
 
+let getUser (id:System.Guid) =
+    ["id", box id]
+    |> query<User> store "select data from user where id = :id"
+
+let getOrCreateUser (email:string) =
+    let users = ["email", box email]
+                |> query<User> store @"select data from ""user"" where data->>'email' = :email;"
+    match users with
+        | [||] -> 
+            let user = {id = System.Guid.NewGuid(); email = email}
+            commit store [insert user.id user]
+            user
+        | [|user|] -> user
+        | _ -> failwith "There are > 1 users with the same email address"
+
 let persistResult cardId (result:CardResult) =
     let logId = System.Guid.NewGuid()
     [insert logId {id = logId; ``when`` = System.DateTime.Now; result = result; cardId = cardId}]

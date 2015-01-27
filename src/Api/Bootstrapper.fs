@@ -14,9 +14,8 @@ type UserMapper() =
     interface IUserMapper with 
         member this.GetUserFromIdentifier(identifier:System.Guid,context) = 
             {new IUserIdentity 
-                            with member this.UserName = identifier.ToString()
+                            with member this.UserName = identifier |> string
                                  member this.Claims = seq {yield "admin"}}
-
 
 type Bootstrapper() =
     inherit DefaultNancyBootstrapper()

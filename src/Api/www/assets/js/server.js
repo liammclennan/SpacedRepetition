@@ -58,10 +58,13 @@
 
     function doAjaxWithErrorHandler(deferred) {
         return Q(deferred).catch(function (httpObj, textStatus) {
-            console.err('An error occurred communicating with the server - ' + textStatus);
             if (httpObj.status == 401) {
-                // user is not authenticated
+                location.hash = '/login'
+                return;
+            } else {
+                console.err('An error occurred communicating with the server - ' + textStatus);
             }
+
         });
     }
 });
