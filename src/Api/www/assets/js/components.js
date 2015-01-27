@@ -197,17 +197,16 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
 
     var Login = React.createFactory(React.createClass({
         render: function () {
-            return GoogleAuthButton({authCallback:function () {}, email: ''});
+            return GoogleAuthButton({authenticated: false, email: ''});
         }
     }));
 
     var GoogleAuthButton = React.createFactory(React.createClass({
         propTypes: {
-            authCallback: React.PropTypes.func.isRequired,
+            authenticated: React.PropTypes.bool.isRequired,
             email: React.PropTypes.string.isRequired
         },
         render: function () {
-            var auth = require('auth');
             return !this.props.authenticated 
                     ? R.a({id:'signinButton'},
                         R.span({

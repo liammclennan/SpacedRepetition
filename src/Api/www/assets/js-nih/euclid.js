@@ -27,13 +27,17 @@
                             console.error("A route's entry function needs to return an array containing a react component and it's props");
                             return;
                         }
+                        if (typeof startData[0] == "string") {
+                            euclid.navigate.apply(euclid, startData);
+                            return;
+                        }
                         startData[1] = startData[1] || {};
                         euclid.rootElement = startData[0];
                         euclid.rootProps = startData[1];
                         euclid.actions = route.actions || {};
                         euclid.title = route.title || "";
                         euclid.rootComponent = React.render(euclid.rootElement, mountPoint);
-                    });
+                    }).done();
                 });
             }
         },
@@ -41,7 +45,7 @@
             var args = Array.prototype.slice.call(arguments, 1);
             Q(euclid.actions[name].apply(euclid.rootProps, args)).then(function (newProps) {
                 euclid.rootComponent.setProps(newProps);
-            });
+            }).done();
         },
         navigate: function (state, components, message) {
             if (message) {

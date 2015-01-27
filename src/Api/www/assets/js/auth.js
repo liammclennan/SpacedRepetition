@@ -1,25 +1,25 @@
 define('auth', ['server'], function (server) {
-    var googleToken;
+    var googleToken, authenticated = false;
 
     function authCallback(authResult) {
-      console.dir(authResult);
+      if (authenticated) return;  
       if (authResult['status']['signed_in']) {
         googleToken = authResult.access_token;
-        document.getElementById('signinButton').setAttribute('style', 'display: none');
         server.authenticate(googleToken)
-            .then(function (token) {
-                localStorage.setItem('nancyToken', token);                
+            .then(function () {
+                authenticated = true;
             })
             .catch(function (error) {console.error(err);});
       } else {
-        return Q(authResult['error']);
+        console.error(authResult['error']);
       }
     }
 
     window.authCallback = authCallback;
 
     return {
-        authCallback: authCallback
-        
+        authCallback: authCallback,
+        authenticated: function () {return authenticated;},
+        notAuthenticated: function () { authenticated = false; }
     };
 });

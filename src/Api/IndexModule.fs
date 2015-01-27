@@ -25,6 +25,7 @@ type IndexModule() as x =
         x.Response.AsJson(UseCases.listDecks, HttpStatusCode.OK) |> box
     
     do x.Get.["/cards/{deckid}"] <- fun parameters ->
+        x.RequiresAuthentication()
         let deckId = (parameters :?> Nancy.DynamicDictionary).["deckid"] |> string
         let deck = deckId |> UseCases.cardsForStudy
         match deck with
@@ -32,6 +33,7 @@ type IndexModule() as x =
             | UseCases.Error e -> x.Response.AsJson("", HttpStatusCode.InternalServerError) |> box
 
     do x.Post.["/card/{cardId}/result/{result}"] <- fun p ->
+        x.RequiresAuthentication()
         let (cardId, result) = 
             (p :?> Nancy.DynamicDictionary) 
             |> (fun dd -> 
@@ -43,6 +45,7 @@ type IndexModule() as x =
         box HttpStatusCode.OK
 
     do x.Get.["/deck"] <- fun _ ->
+        x.RequiresAuthentication()
         let url = (x.Request.Query :?> Nancy.DynamicDictionary).["url"] 
                     |> string
         let deck = url |> UseCases.viewDeckByUrl

@@ -96,22 +96,6 @@
             };
 
             require('app');
-
-            
-
-            var components = require('components'), auth= require('auth');
-            function onSuccess(token) {
-                console.log('auth success');
-                console.dir(token);
-            }
-            var data = {
-                authenticated: false,
-                email: '',
-                authCallback: function (authResult) {
-                    auth.signinCallback(onSuccess, function (error) {console.error(err);})(authResult);
-                }
-            };
-            React.render(components.GoogleAuthButton(data), document.getElementById('mount-googleauth'));
          })();
     </script>
   </body>

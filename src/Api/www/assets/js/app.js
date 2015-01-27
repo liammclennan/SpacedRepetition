@@ -6,11 +6,9 @@
     $.ajaxSetup({
         statusCode: {
             401: function(){
+                auth.notAuthenticated();
                 euclid.navigate('Login');
             }
-        },
-        headers: {
-            'Authorization': localStorage.getItem('nancyToken') ? localStorage.getItem('nancyToken') : ''
         }
     }); 
     
@@ -18,6 +16,9 @@
     euclid.start([{
         title: 'Home',        
         entry: function () {
+            if (!auth.authenticated()) {
+                return ['Login',{}];
+            }
             return server.getDecks().then(function (decks) {
                 var data = {decks: decks};
                 return [components.Home(data), data];
