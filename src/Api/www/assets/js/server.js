@@ -57,14 +57,13 @@
     };
 
     function doAjaxWithErrorHandler(deferred) {
-        return Q(deferred).catch(function (httpObj, textStatus) {
+        return Q(deferred).catch(function (httpObj) {
             if (httpObj.status == 401) {
                 location.hash = '/login'
                 return;
             } else {
-                console.err('An error occurred communicating with the server - ' + textStatus);
+                console.err('An error occurred communicating with the server - ' + httpObj.statusText);
             }
-
         });
     }
 });

@@ -37,3 +37,9 @@ let isDue (card:Card) (logs:StudyLog seq) now =
 let selectForStudy (allCards:Card array) (studyLogs:StudyLog array) now = 
     let items = Array.filter (fun c -> isDue c studyLogs now) allCards
     items
+
+let processMarkdown (cards:Card seq) = 
+    let markdowner = new MarkdownSharp.Markdown()
+    Seq.map (fun card -> 
+        { card with front = markdowner.Transform(card.front); back = markdowner.Transform(card.back)})
+        cards

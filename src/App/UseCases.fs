@@ -64,12 +64,20 @@ let import url (userId:System.Guid) =
     let repoDir = Git.fetch url
     let pathToFiles = FileSource.getMdFiles repoDir
     let deckId = System.Guid.NewGuid()
-    let uow = (insert deckId {id = deckId; name = url; sourceUrl = url; userId = userId} :: (pathToFiles
-                |> Map.toList
-                |> List.map (fun (path,content) -> content)
-                |> List.map Parser.parse
-                |> List.concat
-                |> List.map (fun (q,a) -> { id = System.Guid.NewGuid(); front = q; back = a; created = System.DateTime.Now; deckId = deckId})
-                |> List.map (fun card -> insert card.id card))) 
+    let importedCards = // todo move this to SpacedRepetition
+        pathToFiles
+            |> Map.toList
+            |> List.map (fun (path,content) -> content)
+            |> List.map Parser.parse
+            |> List.concat
+            |> List.map (fun (q,a) -> { id = System.Guid.NewGuid(); front = q; back = a; created = System.DateTime.Now; deckId = deckId})
+    let existingCards = 
+        [("sourceUrl", box url); ("userId",box userId)]
+        |> query<Card> store "select card.data from deck, card
+where deck.data->>'id' = card.data->>'deckId'
+and deck.data->>'sourceUrl' = :sourceUrl 
+and deck.data->>'userId' = :userId;"
+    // todo build merged uow in SpacedRepetition, with nice tests
+    let uow = (insert deckId {id = deckId; name = url; sourceUrl = url; userId = userId} :: (importedCards |> List.map (fun card -> insert card.id card)))
     commit store uow
     ()

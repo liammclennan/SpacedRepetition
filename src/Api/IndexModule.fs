@@ -32,7 +32,8 @@ type IndexModule() as x =
         let deckId = (parameters :?> Nancy.DynamicDictionary).["deckid"] |> string
         let deck = deckId |> UseCases.cardsForStudy
         match deck with
-            | UseCases.Success cs -> x.Response.AsJson(cs, HttpStatusCode.OK) |> box
+            | UseCases.Success cs ->                 
+                x.Response.AsJson(SpacedRepetition.processMarkdown cs, HttpStatusCode.OK) |> box
             | UseCases.Error e -> x.Response.AsJson("", HttpStatusCode.InternalServerError) |> box
 
     do x.Post.["/card/{cardId}/result/{result}"] <- fun p ->
