@@ -28,9 +28,5 @@ type AuthModule() as x =
         else
             HttpStatusCode.Unauthorized |> box
 
-    do x.Get.["/user"] <- fun _ ->
-        x.RequiresAuthentication()
-        x.Context.CurrentUser.UserName
-            |> x.Response.AsText |> box
     
 
