@@ -1,4 +1,4 @@
-define('components', ['euclid','urls'], function (euclid, urls) {
+define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
     var R = React.DOM;
 
     var formMixin = {
@@ -195,9 +195,36 @@ define('components', ['euclid','urls'], function (euclid, urls) {
         }
     }));
 
+    var Login = React.createFactory(React.createClass({
+        render: function () {
+            return GoogleAuthButton({authCallback:function () {}, email: ''});
+        }
+    }));
+
+    var GoogleAuthButton = React.createFactory(React.createClass({
+        propTypes: {
+            authCallback: React.PropTypes.func.isRequired,
+            email: React.PropTypes.string.isRequired
+        },
+        render: function () {
+            var auth = require('auth');
+            return !this.props.authenticated 
+                    ? R.a({id:'signinButton'},
+                        R.span({
+                            className:'g-signin', 
+                            'data-callback': 'authCallback', 
+                            'data-clientid': '462242762693-mgb4l3cm8loenne6p0tkopvufbha0t56.apps.googleusercontent.com',
+                            'data-cookiepolicy': 'single_host_origin', 
+                            'data-scope': 'profile email'}))
+                    : R.span(this.props.email);
+        }
+    }));
+
     return {
         Home: Home,
         Deck: Deck,
-        Study: Study
+        Study: Study,
+        GoogleAuthButton: GoogleAuthButton,
+        Login: Login
     };
 });

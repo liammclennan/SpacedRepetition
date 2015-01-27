@@ -1,18 +1,28 @@
 ﻿define('server', ['fermat'], function (fermat) {
-    var appUrl = window.location.protocol.indexOf("file") > -1 ? 'http://localhost:11285' : 'http://studynotesapi.azurewebsites.net';
+    var appUrl = window.location.protocol.indexOf("file") > -1  || window.location.host.indexOf('localhost') > -1 ? 'http://localhost:11285' : 'http://studynotesapi.azurewebsites.net';
     var serverStates = fermat({
         Cards: appUrl + '/cards/:deckId',
         'Card/Result': appUrl + '/card/:cardId/result/:result'
     });
 
+    function ajaxPostOptions(data) {
+        return {
+            contentType: 'application/json',
+            type: 'POST',
+            data: JSON.stringify(data)
+        };
+    }
+
     return {
+        authenticate: function (accessToken) {
+            return doAjaxWithErrorHandler($.ajax(
+                appUrl + '/auth', 
+                ajaxPostOptions({ accessToken: accessToken })
+            ));
+        },
         importGitWiki: function (url) {
             return doAjaxWithErrorHandler($.ajax(
-                appUrl + '/import', {
-                    contentType: 'application/json',
-                    type: 'POST',
-                    data: JSON.stringify({ url: url })
-                }));
+                appUrl + '/import', ajaxPostOptions({url:url})));
         },
         getDeck: function (url) {
             return doAjaxWithErrorHandler($.ajax(
@@ -47,8 +57,11 @@
     };
 
     function doAjaxWithErrorHandler(deferred) {
-        return Q(deferred).catch(function (error) {
-            console.err('An error occurred communicating with the server');
+        return Q(deferred).catch(function (httpObj, textStatus) {
+            console.err('An error occurred communicating with the server - ' + textStatus);
+            if (httpObj.status == 401) {
+                // user is not authenticated
+            }
         });
     }
 });

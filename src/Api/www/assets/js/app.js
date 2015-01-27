@@ -1,7 +1,19 @@
 ﻿define(
     'app',
-    ['server', 'euclid', 'components'],
-    function (server, euclid, components) {
+    ['server', 'euclid', 'components','auth'],
+    function (server, euclid, components, auth) {
+
+    $.ajaxSetup({
+        statusCode: {
+            401: function(){
+                euclid.navigate('Login');
+            }
+        },
+        headers: {
+            'Authorization': localStorage.getItem('nancyToken') ? localStorage.getItem('nancyToken') : ''
+        }
+    }); 
+    
     
     euclid.start([{
         title: 'Home',        
@@ -20,7 +32,17 @@
                 });
             }
         }
-    }, {
+    },
+    {
+        title: 'Login',        
+        entry: function () {
+            var data = {};
+            return [components.Login(), data];
+        },
+        actions: {
+        }
+    },
+    {
         title: 'Deck',
         entry: function (urlEncoded) {
             var url = atob(decodeURIComponent(urlEncoded));
@@ -88,7 +110,8 @@
     }], document.getElementById('app'), {
         'Home': '/',
         'Deck': '/deck/:url',
-        'Deck/Study': '/deck/study/:deckId/:urlEncoded'
+        'Deck/Study': '/deck/study/:deckId/:urlEncoded',
+        'Login': '/login'
     });
 });
 

@@ -60,23 +60,25 @@
     <Compile Include="Bootstrapper.fs" />
     <Compile Include="IndexModule.fs" />
     <Content Include="Web.config" />
-    <None Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
     <None Include="packages.config" />
-    <Content Include="readme.txt" />
+    <Compile Include="AuthModule.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
       <HintPath>..\packages\FSharp.Core.3.1.2.1\lib\net40\FSharp.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="HttpClient">
+      <HintPath>..\packages\Http.fs.1.5.1\lib\net40\HttpClient.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="Nancy">
       <HintPath>..\packages\Nancy.1.0.0\lib\net40\Nancy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nancy.Authentication.Token">
+      <HintPath>..\packages\Nancy.Authentication.Token.1.0.0\lib\net40\Nancy.Authentication.Token.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Nancy.Hosting.Aspnet">
@@ -102,6 +104,11 @@
     <ProjectReference Include="..\App\App.fsproj">
       <Name>App</Name>
       <Project>{2cdded10-bf62-4602-b0af-fa6bbcdc7184}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Tokenizer\Tokenizer.csproj">
+      <Name>Tokenizer</Name>
+      <Project>{b67d7100-c6d3-4164-97c0-9814de25919a}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>

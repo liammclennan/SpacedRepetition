@@ -3,7 +3,7 @@
 open System
 open Nancy
 open Nancy.ModelBinding
-open Operators
+open Nancy.Security
 
 [<CLIMutable>]
 type Url = {url:string}
@@ -15,17 +15,13 @@ type IndexModule() as x =
         x.Response.AsRedirect("index.html") |> box
     
     do x.Post.["/import"] <- fun _ ->
-        try 
-            let model = x.Bind<Url>()
-            UseCases.import model.url
-            x.Response.AsText(model.url) |> box
-        with 
-            | :? System.Exception as ex -> x.Response.AsText("gaahh!!" + ex.Message) |> box
-
-    do x.Post.["/other"] <- fun _ ->
-        box "meowww"
+        x.RequiresAuthentication()
+        let model = x.Bind<Url>()
+        UseCases.import model.url
+        x.Response.AsText(model.url) |> box
 
     do x.Get.["/decks"] <- fun _ ->
+        x.RequiresAuthentication()
         x.Response.AsJson(UseCases.listDecks, HttpStatusCode.OK) |> box
     
     do x.Get.["/cards/{deckid}"] <- fun parameters ->

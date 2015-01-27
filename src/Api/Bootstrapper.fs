@@ -7,6 +7,7 @@ open Nancy.Bootstrapper
 open Nancy.Conventions
 open Serilog
 open Nancy.Responses
+open Nancy.Authentication.Token
 
 type Bootstrapper() =
     inherit DefaultNancyBootstrapper()
@@ -19,6 +20,9 @@ type Bootstrapper() =
 //        let file = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "log-{Date}.txt")
 //        let log = (new LoggerConfiguration()).WriteTo.RollingFile(file).CreateLogger()
 //        
+
+        TokenAuthentication.Enable(pipelines, new TokenAuthenticationConfiguration(container.Resolve<ITokenizer>()))
+
         pipelines.OnError.AddItemToEndOfPipeline(fun (ctx:NancyContext) ex -> 
                                                     (*log.Error("Unhandled exception {@ex}", ex);*) ctx.Response)
      
@@ -32,5 +36,10 @@ type Bootstrapper() =
                 ()
             )
         ()
+
+    override this.ConfigureApplicationContainer(container: TinyIoCContainer) =
+        container.Register<ITokenizer>(new Tokenizer.LiamTokenizer()) |> ignore
+        ()
+
 
    
