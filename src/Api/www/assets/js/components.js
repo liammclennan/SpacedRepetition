@@ -142,8 +142,7 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
             this.setState(this.getInitialState());
         },
         render: function () {
-            return R.div(null, 
-                
+            return R.div({id:'card'}, 
                 R.div({onClick: this.clicked, className:'card'}, 
                     R.div({className:'card-inner' + (this.state.showingFront ? '' : ' card-flip')},
                         this.state.showingFront ? R.div({className: 'card-inner-inner front'}, this.props.front) : '',
@@ -161,6 +160,9 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
                         this.state.showingFront ? '' : R.li(null, 'left arrow = difficult'),
                         this.state.showingFront ? '' : R.li(null, 'right arrow = easy')))
             );
+        },
+        componentDidUpdate: function (prevProps, prevState) {
+                MathJax.Hub.Queue(["Typeset",MathJax.Hub,'card']);
         },
         clicked: function () {
             this.setState({showingFront: !this.state.showingFront});
