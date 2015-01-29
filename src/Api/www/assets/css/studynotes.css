@@ -40,3 +40,24 @@
 
 .card-inner.card-flip {
 }
+
+.deck-list-item {
+    text-align: bottom;
+    min-height: 50px;
+    border-radius: 4px 4px 4px 4px;
+    -moz-border-radius: 4px 4px 4px 4px;
+    -webkit-border-radius:4px 4px 4px 4px;
+    background-color: #eee;
+}
+
+.deck-list-item:hover {
+    opacity: 1.0;
+    border: 2px solid #2c3e50;
+    
+}
+
+.deck-list-item > a {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+}

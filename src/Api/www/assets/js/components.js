@@ -63,7 +63,7 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
             sourceUrl: React.PropTypes.string.isRequired
         },
         render: function () {
-            return R.td(null, R.a({href: '#' + euclid.state('Deck', {url: urls.encodeForPath(this.props.sourceUrl)})}, this.props.name));
+            return R.div({className: 'col-md-4 deck-list-item col-sm-6'}, R.a({href: '#' + euclid.state('Deck', {url: urls.encodeForPath(this.props.sourceUrl)})}, this.props.name));
         }
     }));
 
@@ -78,18 +78,18 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
         render: function () {
             return R.section(
                 {className:'text-center'},
-                R.h2({ className:""}, 'Wikis'),
+                R.h2({ className:""}, 'Notebooks'),
                 R.hr({className:'star-primary'}),
                 R.form({ className: 'form-inline', onSubmit: this.import },
                     R.div({ className: 'form-group' },
                         R.input({ type: 'text', className: 'form-control', placeholder: 'wiki git url', value: this.state.importUrl, onChange: this.bindToState('importUrl') }),
                         R.button({className: 'btn btn-default'}, 'Import Wiki'))),
                 
-                R.table({className:'table table-striped',style: {'marginTop': '30'}}, 
-                    R.tr(null, this.props.decks.map(function (deck) {
+                R.div({className: 'col-md-12', style: {'marginTop': '30'}}, 
+                    this.props.decks.map(function (deck) {
                         deck.key = deck.id;
                         return DeckListItem(deck);
-                    }))
+                    })
                 )
             );
         },

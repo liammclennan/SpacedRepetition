@@ -8,7 +8,8 @@
             401: function(){
                 euclid.navigate('Login');
             }
-        }
+        },
+        cache: false
     }); 
     
     
