@@ -7,7 +7,7 @@ type UseCaseResult<'a> =
     | Success of 'a
     | Error of string
 
-let private store = SqlStore System.Configuration.ConfigurationManager.ConnectionStrings.["db"].ConnectionString
+let private store = SqlStore System.Configuration.ConfigurationManager.ConnectionStrings.["studynotesapi_db"].ConnectionString
 
 let getUser (id:System.Guid) =
     ["id", box id]
