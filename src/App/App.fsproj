@@ -64,6 +64,7 @@
     <Compile Include="SpacedRepetition.fs" />
     <Compile Include="UseCases.fs" />
     <Content Include="app.config" />
+    <None Include="Script1.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FParsec">

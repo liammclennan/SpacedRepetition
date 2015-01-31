@@ -1,9 +1,13 @@
 module SpacedRepetition
 
+[<CLIMutable>]
 type Card = { id:System.Guid; front: string; back: string; created: System.DateTime; deckId: System.Guid }
+[<CLIMutable>]
 type Deck = { id:System.Guid; name: string; sourceUrl: string; userId: System.Guid }
 type CardResult = Easy | Hard
+[<CLIMutable>]
 type StudyLog = { id: System.Guid; ``when``: System.DateTime; result: CardResult; cardId: System.Guid }
+[<CLIMutable>]
 type User = {id: System.Guid; email: string}
 
 // EF' = EF+(0.1-(5-q)*(0.08+(5-q)*0.02))
