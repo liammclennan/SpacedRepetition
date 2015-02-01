@@ -6,19 +6,20 @@
     $.ajaxSetup({
         statusCode: {
             401: function(){
-                euclid.navigate('Login');
+                //euclid.navigate('Login');
             }
         },
         cache: false
-    }); 
-    
+    });    
     
     euclid.start([{
         title: 'Home',        
         entry: function () {
+            var isAuthenticated = !!(window.localStorage.getItem("email") && window.localStorage.getItem("email") != "");
+            if (!isAuthenticated) return [React.DOM.div(null, 'Not authenticated'), {}];
             return server.getDecks().then(function (decks) {
                 if (typeof decks == 'string') {
-                    return ['Login',{}];
+                    alert('problem with get decks ' + decks);//return ['Login',{}];
                 }
                 var data = {decks: decks};
                 return [components.Home(data), data];
@@ -32,15 +33,6 @@
                     return props;
                 });
             }
-        }
-    },
-    {
-        title: 'Login',        
-        entry: function () {
-            var data = {};
-            return [components.Login(), data];
-        },
-        actions: {
         }
     },
     {
@@ -112,7 +104,7 @@
         'Home': '/',
         'Deck': '/deck/:url',
         'Deck/Study': '/deck/study/:deckId/:urlEncoded',
-        'Login': '/login'
+        'Login':'/login'
     });
 });
 

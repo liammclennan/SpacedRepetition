@@ -1,5 +1,5 @@
 ﻿define('server', ['fermat'], function (fermat) {
-    var appUrl = window.location.protocol.indexOf("file") > -1  || window.location.host.indexOf('localhost') > -1 ? 'http://localhost:11285' : 'http://studynotesapi.azurewebsites.net';
+    var appUrl = ''; //window.location.protocol.indexOf("file") > -1  || window.location.host.indexOf('localhost') > -1 ? 'http://localhost:11285' : 'http://studynotesapi.azurewebsites.net';
     var serverStates = fermat({
         Cards: appUrl + '/cards/:deckId',
         'Card/Result': appUrl + '/card/:cardId/result/:result'
@@ -59,7 +59,8 @@
     function doAjaxWithErrorHandler(deferred) {
         return Q(deferred).catch(function (httpObj) {
             if (httpObj.status == 401) {
-                location.hash = '/login'
+                alert('http 401');
+                //location.hash = '/login'
                 return;
             } else {
                 console.err('An error occurred communicating with the server - ' + httpObj.statusText);

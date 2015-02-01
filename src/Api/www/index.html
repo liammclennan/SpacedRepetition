@@ -47,7 +47,7 @@
                     <li class="hidden">
                         <a href="#page-top"></a>
                     </li>
-                    <li id="mount-googleauth"></li>
+                    <li id="login"></li>
                     <li class="page-scroll">
                         <a href="#about">About</a>
                     </li>   
@@ -82,7 +82,7 @@
     <script src="assets/js/components.js"></script>
     <script src="assets/js/auth.js"></script>
     <script src="assets/js/app.js"></script>
-    <script src="https://apis.google.com/js/client:platform.js" async defer></script>
+    <script src="https://login.persona.org/include.js"></script>
     <script>
         (function () { 
             $(document).ajaxStart(function() {
@@ -97,6 +97,35 @@
             window.onerror = function(msg, url, line, col, error) {
                toastr.error(msg, 'An error occurred'); 
             };
+
+            React.render(require('components').Login(), document.getElementById('login'));
+
+            navigator.id.watch({
+              loggedInUser: window.localStorage.getItem("email"),
+              onlogin: function(assertion) {
+                $.ajax({ 
+                  type: 'POST',
+                  url: '/auth/login', // This is a URL on your website.
+                  data: {assertion: assertion},
+                  success: function(res, status, xhr) { 
+                    window.localStorage.setItem("email", res);
+                    window.location.href = '/';
+                },
+                  error: function(xhr, status, err) {
+                    navigator.id.logout();
+                  }
+                });
+              },
+              onlogout: function() {
+                window.localStorage.removeItem("email");
+                $.ajax({
+                  type: 'POST',
+                  url: '/auth/logout', 
+                  success: function(res, status, xhr) { window.location.reload(); },
+                  error: function(xhr, status, err) { alert("Logout failure: " + err); }
+                });
+              }
+            });
 
             require('app');
          })();

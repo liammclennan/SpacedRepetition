@@ -7,15 +7,8 @@ open Nancy.Bootstrapper
 open Nancy.Conventions
 open Serilog
 open Nancy.Responses
-open Nancy.Authentication.Forms
 open Nancy.Security
-
-type UserMapper() =
-    interface IUserMapper with 
-        member this.GetUserFromIdentifier(identifier:System.Guid,context) = 
-            {new IUserIdentity 
-                            with member this.UserName = identifier |> string
-                                 member this.Claims = seq {yield "admin"}}
+open Nancy.Session
 
 type Bootstrapper() =
     inherit DefaultNancyBootstrapper()
@@ -28,11 +21,6 @@ type Bootstrapper() =
 //        let file = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "log-{Date}.txt")
 //        let log = (new LoggerConfiguration()).WriteTo.RollingFile(file).CreateLogger()
 //        
-        let frmCfg = new FormsAuthenticationConfiguration()
-        frmCfg.UserMapper <- container.Resolve<IUserMapper>()
-        frmCfg.RedirectUrl <- "~/index.html#/login"
-        FormsAuthentication.Enable(pipelines, frmCfg)
-
         pipelines.OnError.AddItemToEndOfPipeline(fun (ctx:NancyContext) ex -> 
                                                     (*log.Error("Unhandled exception {@ex}", ex);*) ctx.Response)
      
@@ -48,7 +36,10 @@ type Bootstrapper() =
         ()
 
     override this.ConfigureApplicationContainer(container: TinyIoCContainer) =
-        container.Register<IUserMapper>(new UserMapper()) |> ignore
+        ()
+
+    override this.ApplicationStartup(container, pipelines: IPipelines) =
+        CookieBasedSessions.Enable(pipelines)
         ()
 
 

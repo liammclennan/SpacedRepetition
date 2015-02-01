@@ -199,25 +199,10 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
 
     var Login = React.createFactory(React.createClass({
         render: function () {
-            return GoogleAuthButton({authenticated: false, email: ''});
-        }
-    }));
-
-    var GoogleAuthButton = React.createFactory(React.createClass({
-        propTypes: {
-            authenticated: React.PropTypes.bool.isRequired,
-            email: React.PropTypes.string.isRequired
-        },
-        render: function () {
-            return !this.props.authenticated 
-                    ? R.a({id:'signinButton'},
-                        R.span({
-                            className:'g-signin', 
-                            'data-callback': 'authCallback', 
-                            'data-clientid': '462242762693-mgb4l3cm8loenne6p0tkopvufbha0t56.apps.googleusercontent.com',
-                            'data-cookiepolicy': 'single_host_origin', 
-                            'data-scope': 'profile email'}))
-                    : R.span(this.props.email);
+            var isAuthenticated = !!(window.localStorage.getItem("email") && window.localStorage.getItem("email") != "");
+            return isAuthenticated 
+                    ? R.a({onClick: function (){navigator.id.logout();}}, window.localStorage.getItem("email")) 
+                    : R.a({onClick: function (){navigator.id.request();}},'Log in');
         }
     }));
 
@@ -225,7 +210,6 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
         Home: Home,
         Deck: Deck,
         Study: Study,
-        GoogleAuthButton: GoogleAuthButton,
         Login: Login
     };
 });

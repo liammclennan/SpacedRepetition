@@ -25,6 +25,7 @@
     <NuGetPackageImportStamp>5ff458db</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <RunOctoPack>true</RunOctoPack>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -34,6 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <RunOctoPack>true</RunOctoPack>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <Tailcalls>true</Tailcalls>
@@ -75,10 +77,6 @@
     <Reference Include="mscorlib" />
     <Reference Include="Nancy">
       <HintPath>..\packages\Nancy.1.0.0\lib\net40\Nancy.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Nancy.Authentication.Forms">
-      <HintPath>..\packages\Nancy.Authentication.Forms.1.0.0\lib\net40\Nancy.Authentication.Forms.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Nancy.Hosting.Aspnet">
