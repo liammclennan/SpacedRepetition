@@ -48,6 +48,7 @@
     -moz-border-radius: 4px 4px 4px 4px;
     -webkit-border-radius:4px 4px 4px 4px;
     background-color: #eee;
+    border: 2px solid #eee;
 }
 
 .deck-list-item:hover {

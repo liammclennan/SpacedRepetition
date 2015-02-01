@@ -85,51 +85,9 @@
     <script src="https://login.persona.org/include.js"></script>
     <script>
         (function () { 
-            $(document).ajaxStart(function() {
-                NProgress.start();
-            });
-            $(document).ajaxStop(function() {
-                NProgress.done();
-            });
-            $( document ).ajaxError(function(e, jqxhr, settings, thrownError) {
-                toastr.error('An error occurred during communication with the server');
-            });
-            window.onerror = function(msg, url, line, col, error) {
-               toastr.error(msg, 'An error occurred'); 
-            };
-
             React.render(require('components').Login(), document.getElementById('login'));
-
-            navigator.id.watch({
-              loggedInUser: window.localStorage.getItem("email"),
-              onlogin: function(assertion) {
-                $.ajax({ 
-                  type: 'POST',
-                  url: '/auth/login', // This is a URL on your website.
-                  data: {assertion: assertion},
-                  success: function(res, status, xhr) { 
-                    window.localStorage.setItem("email", res);
-                    window.location.href = '/';
-                },
-                  error: function(xhr, status, err) {
-                    navigator.id.logout();
-                  }
-                });
-              },
-              onlogout: function() {
-                window.localStorage.removeItem("email");
-                $.ajax({
-                  type: 'POST',
-                  url: '/auth/logout', 
-                  success: function(res, status, xhr) { window.location.reload(); },
-                  error: function(xhr, status, err) { alert("Logout failure: " + err); }
-                });
-              }
-            });
-
             require('app');
          })();
-
     </script>
   </body>
 </html>

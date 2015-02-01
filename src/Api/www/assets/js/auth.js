@@ -1,24 +1,44 @@
 define('auth', ['server','euclid'], function (server,euclid) {
-    var googleToken;
 
-    function authCallback(authResult) {
-      if (authResult['status']['signed_in']) {
-        googleToken = authResult.access_token;
-        server.authenticate(googleToken)
-            .then(function () {
-                euclid.navigate('Home');
-            })
-            .catch(function (error) {console.error(err);});
-      } else {
-        console.error(authResult['error']);
-      }
+    function watch() {
+        navigator.id.watch({
+          loggedInUser: window.localStorage.getItem("email"),
+          onlogin: function(assertion) {
+            $.ajax({ 
+              type: 'POST',
+              url: '/auth/login',
+              data: {assertion: assertion},
+              success: function(res, status, xhr) { 
+                window.localStorage.setItem("email", res);
+                window.location.href = '/';
+            },
+              error: function(xhr, status, err) {
+                navigator.id.logout();
+              }
+            });
+          },
+          onlogout: function() {
+            $.ajax({
+              type: 'POST',
+              url: '/auth/logout', 
+              success: function(res, status, xhr) { window.location.href = '/'; },
+              error: function(xhr, status, err) { alert("Logout failure: " + err); }
+            });
+          }
+        });
     }
 
-    window.authCallback = authCallback;
-
     return {
-        authCallback: authCallback,
-        authenticated: function () {return authenticated;},
-        notAuthenticated: function () { authenticated = false; }
+        watch: watch,
+        isAuthenticated: function () {
+            return !!(window.localStorage.getItem("email") && window.localStorage.getItem("email") != "");
+        },
+        user: function () {
+            return window.localStorage.getItem("email");
+        },
+        logout: function () {
+            navigator.id.logout();
+            window.localStorage.removeItem("email");
+        }
     };
 });

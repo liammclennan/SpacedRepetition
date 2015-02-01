@@ -63,7 +63,10 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
             sourceUrl: React.PropTypes.string.isRequired
         },
         render: function () {
-            return R.div({className: 'col-md-4 deck-list-item col-sm-6'}, R.a({href: '#' + euclid.state('Deck', {url: urls.encodeForPath(this.props.sourceUrl)})}, this.props.name));
+            return R.div({className: 'col-md-4 deck-list-item col-sm-6', onClick: this.go}, R.a({href: '#'}, this.props.name));
+        },
+        go: function () {
+            euclid.navigate('Deck', {url: urls.encodeForPath(this.props.sourceUrl)});
         }
     }));
 
@@ -199,9 +202,8 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
 
     var Login = React.createFactory(React.createClass({
         render: function () {
-            var isAuthenticated = !!(window.localStorage.getItem("email") && window.localStorage.getItem("email") != "");
-            return isAuthenticated 
-                    ? R.a({onClick: function (){navigator.id.logout();}}, window.localStorage.getItem("email")) 
+            return auth.isAuthenticated() 
+                    ? R.a({onClick: function (){auth.logout();}}, auth.user()) 
                     : R.a({onClick: function (){navigator.id.request();}},'Log in');
         }
     }));

@@ -60,6 +60,7 @@
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v12.0\WebApplications\Microsoft.WebApplication.targets" Condition="true" />
   <ItemGroup>
     <Compile Include="Bootstrapper.fs" />
+    <Compile Include="Auth.fs" />
     <Compile Include="IndexModule.fs" />
     <Content Include="Web.config" />
     <None Include="packages.config" />

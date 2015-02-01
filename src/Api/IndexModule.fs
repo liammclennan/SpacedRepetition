@@ -4,19 +4,13 @@ open System
 open Nancy
 open Nancy.ModelBinding
 open Nancy.Security
-
-module Auth = 
-    let isAuthenticated (m:NancyModule) =
-        m.Session.["email"] <> null 
-            && (m.Session.["email"] |> string |> String.IsNullOrEmpty |> not)
+open Auth
 
 [<CLIMutable>]
 type Url = {url:string}
 
 type IndexModule() as x =
     inherit NancyModule()
-
-    let userId() = new System.Guid(x.Session.["userId"] |> string)
 
     do x.Get.["/"] <- fun _ ->
         x.Response.AsRedirect("index.html") |> box
@@ -26,14 +20,14 @@ type IndexModule() as x =
             HttpStatusCode.Unauthorized |> box
         else
             let model = x.Bind<Url>()
-            UseCases.import model.url (userId())
+            UseCases.import model.url (userId(x))
             x.Response.AsText(model.url) |> box
 
     do x.Get.["/decks"] <- fun _ ->
         if Auth.isAuthenticated(x) |> not then
             HttpStatusCode.Unauthorized |> box
         else
-            x.Response.AsJson(UseCases.listDecks (userId()), HttpStatusCode.OK) |> box
+            x.Response.AsJson(UseCases.listDecks (userId(x)), HttpStatusCode.OK) |> box
     
     do x.Get.["/cards/{deckid}"] <- fun parameters ->
         if Auth.isAuthenticated(x) |> not then
@@ -66,7 +60,7 @@ type IndexModule() as x =
         else
             let url = (x.Request.Query :?> Nancy.DynamicDictionary).["url"] 
                         |> string
-            let deck = UseCases.viewDeckByUrl url (userId())
+            let deck = UseCases.viewDeckByUrl url (userId(x))
             if Array.isEmpty deck then            
                 box HttpStatusCode.NotFound
             else

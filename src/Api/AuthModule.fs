@@ -22,9 +22,11 @@ type AuthModule() as x =
     do x.Post.["/auth/login"]<- fun _ ->
         let model = x.Bind<Assertion>()
         let mozUrl = "https://verifier.login.persona.org/verify"
+
+        
         let response = createRequest Post mozUrl
                         |> withHeader (ContentType "application/x-www-form-urlencoded")
-                        |> withBody (sprintf "assertion=%s&audience=%s" model.assertion "http://localhost:11285")
+                        |> withBody (sprintf "assertion=%s&audience=%s" model.assertion (if x.Request.Url.HostName.Contains("localhost") then "http://localhost:11285" else "http://studynotes.cloudapp.net"))
                         |> getResponse
         match response.StatusCode with
             | 200 ->  
@@ -44,6 +46,7 @@ type AuthModule() as x =
 
     do x.Get.["/demo"] <- fun _ ->
         let user =  UseCases.getOrCreateUser "demo@demo.com"
+
 //        x.LoginWithoutRedirect(user.id, new Nullable<System.DateTime>(System.DateTime.Now.AddDays(365.)))
         x.Response.AsRedirect("index.html") |> box
 

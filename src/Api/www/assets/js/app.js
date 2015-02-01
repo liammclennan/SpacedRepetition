@@ -6,17 +6,31 @@
     $.ajaxSetup({
         statusCode: {
             401: function(){
-                //euclid.navigate('Login');
+                auth.logout();
+                window.location.href = '/';
             }
         },
         cache: false
-    });    
+    });
+    $(document).ajaxStart(function() {
+        NProgress.start();
+    });
+    $(document).ajaxStop(function() {
+        NProgress.done();
+    });
+    $(document).ajaxError(function(e, jqxhr, settings, thrownError) {
+        toastr.error('An error occurred during communication with the server');
+    });
+    window.onerror = function(msg, url, line, col, error) {
+       toastr.error(msg, 'An error occurred'); 
+    };
+
+    auth.watch();
     
     euclid.start([{
         title: 'Home',        
         entry: function () {
-            var isAuthenticated = !!(window.localStorage.getItem("email") && window.localStorage.getItem("email") != "");
-            if (!isAuthenticated) return [React.DOM.div(null, 'Not authenticated'), {}];
+            if (!auth.isAuthenticated()) return [React.DOM.div(null, 'Not authenticated'), {}];
             return server.getDecks().then(function (decks) {
                 if (typeof decks == 'string') {
                     alert('problem with get decks ' + decks);//return ['Login',{}];
