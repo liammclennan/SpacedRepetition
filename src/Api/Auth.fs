@@ -12,12 +12,12 @@ let logout (m:NancyModule) =
     m.Session.["email"] <- ""
     m.Session.["userId"] <- ""
 
-let userId (m:NancyModule) =
-    new System.Guid(m.Session.["userId"] |> string)
-
 let isAuthenticated (m:NancyModule) =
     m.Session.["email"] <> null 
         && (m.Session.["email"] |> string |> String.IsNullOrEmpty |> not)
         && m.Session.["userId"] <> null 
         && (m.Session.["userId"] |> string |> String.IsNullOrEmpty |> not)
+
+let userId (m:NancyModule) =
+    new System.Guid(m.Session.["userId"] |> string)
 

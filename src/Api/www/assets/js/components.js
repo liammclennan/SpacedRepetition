@@ -71,28 +71,49 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
     }));
 
     var Home = React.createFactory(React.createClass({
-        displayName: 'Home',
-        getInitialState: function () {
-            return { importUrl: '' };
-        },
+        displayName: 'Home',        
         propTypes: {
             decks: React.PropTypes.array.isRequired
         },
         render: function () {
-            return R.section(
+            return R.div({className:'row'},R.section(
                 {className:'text-center'},
                 R.h2({ className:""}, 'Notebooks'),
-                R.hr({className:'star-primary'}),
-                R.form({ className: 'form-inline', onSubmit: this.import },
-                    R.div({ className: 'form-group' },
-                        R.input({ type: 'text', className: 'form-control', placeholder: 'notebook git url', value: this.state.importUrl, onChange: this.bindToState('importUrl') }),
-                        R.button({className: 'btn btn-default'}, 'Import Notebook'))),
-                
+                R.hr({className:'star-primary'}),                
                 R.div({className: 'col-md-12', style: {'marginTop': '30'}}, 
                     this.props.decks.map(function (deck) {
                         deck.key = deck.id;
                         return DeckListItem(deck);
                     })
+                )
+            ));
+        }
+    }));
+
+    var NotAuthenticated = React.createFactory(React.createClass({
+        render: function () {
+            return R.section(
+                {className:'row text-center hero'},
+                R.h2({ className:""}, 'Study Notes and Spaced Repetition'),
+                R.hr({className:'star-primary'}),                
+                R.div({className: 'col-md-12'},  ''));
+        }
+    }));
+
+    var Import = React.createFactory(React.createClass({
+        getInitialState: function () {
+            return { importUrl: '' };
+        },
+        render: function () {
+            return R.section(
+                {className:'text-center'},
+                R.h2(null, 'Import a Notebook'),
+                R.hr({className:'star-primary'}),
+                R.form({ className: 'form-inline', onSubmit: this.import },
+                    R.div({ className: 'form-group' },
+                        R.input({ type: 'text', className: 'form-control', placeholder: 'notebook git url', value: this.state.importUrl, onChange: this.bindToState('importUrl') }),
+                        R.button({className: 'btn btn-default'}, 'Import Notebook')
+                    )
                 )
             );
         },
@@ -117,8 +138,8 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
         },
         render: function () {
             return R.section(null, 
-                R.h3(null, this.props.deck.name),
-                R.button({onClick: euclid.action.bind(euclid, 'sync', this.props.deck.id)}, 'Sync Now'),
+                R.button({onClick: euclid.action.bind(euclid, 'sync', this.props.deck.id), className:'btn btn-default pull-right'}, 'Sync Now'),
+                R.h3(null, this.props.deck.name),                
                 R.p(null, this.props.deck.sourceUrl),
                 R.div(null, AsycContent(this.props.cards, 'Total cards ' + this.props.cards.length)),
                 R.div(null, 
@@ -203,13 +224,15 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
     var Login = React.createFactory(React.createClass({
         render: function () {
             return auth.isAuthenticated() 
-                    ? R.a({href:'#', onClick: auth.logout}, auth.user()) 
-                    : R.a({href:'#', onClick: navigator.id.request},'Log in');
+                    ? R.a({href:'#', onClick: auth.logout.bind(auth)}, auth.user()) 
+                    : R.a({href:'#', onClick: function () {navigator.id.request();}},'Log in');
         }
     }));
 
     return {
         Home: Home,
+        NotAuthenticated: NotAuthenticated,
+        Import: Import,
         Deck: Deck,
         Study: Study,
         Login: Login

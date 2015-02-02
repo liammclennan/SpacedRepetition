@@ -57,21 +57,31 @@ let extractSpacedRepetitionData (pathToFiles:Map<string,string> (*this is a map 
         |> List.map Parser.parse
         |> List.concat 
 
-let cardFromData deckId ((q,a):string * string) = 
+let cardFromDataWithId deckId cardId ((q,a):string * string) = 
+    { id = cardId; front = q; back = a; created = System.DateTime.Now; deckId = deckId}
+
+let cardFromDataWithNewId deckId ((q,a):string * string) = 
     { id = System.Guid.NewGuid(); front = q; back = a; created = System.DateTime.Now; deckId = deckId}
 
 let syncCards (existingCards:Card[]) (srData:(string * string) list(*[(q,a)]*)) deckId = 
+    // this function is required because the db roundtrip seems to convert
+    // \n -> \r\n meaning that the text no longer matches.
+    let textMatch (f:string) (s:string) = 
+        f.Replace("\r\n", "\n") = s.Replace("\r\n","\n")
+
     let createCard = fun (q,a) -> 
-        match Array.filter (fun card -> card.front = q) existingCards with
-            | [||] -> Some <| insert (System.Guid.NewGuid()) (cardFromData deckId (q,a))
+        match Array.filter (fun card -> textMatch card.front q) existingCards with
+            | [||] -> 
+                let id = System.Guid.NewGuid()
+                Some <| insert id (cardFromDataWithId deckId id (q,a))
             | matches -> let existingCard = matches.[0]
-                         if existingCard.back = a then 
+                         if textMatch existingCard.back a then 
                             None
                          else
                             Some <| update existingCard.id {existingCard with back = a}
     
     let deletes = 
-        existingCards |> Array.filter (fun c -> List.exists (fun (q,a) -> c.front = q) srData |> not)
+        existingCards |> Array.filter (fun c -> List.exists (fun (q,a) -> textMatch c.front q) srData |> not)
         |> Array.map (fun c -> delete c.id c) 
         |> List.ofArray
     let updatesAndInserts = List.choose createCard srData

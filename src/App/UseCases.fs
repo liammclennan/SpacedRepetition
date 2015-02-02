@@ -93,7 +93,7 @@ let import url (userId:System.Guid) =
     else
         let deckId = System.Guid.NewGuid()
         let importedCards = getSpacedRepetitionDataFromUrl url
-                            |> List.map (SpacedRepetition.cardFromData deckId)
+                            |> List.map (SpacedRepetition.cardFromDataWithNewId deckId)
         let uow = (insert deckId {id = deckId; name = trim url 25; sourceUrl = url; userId = userId} :: (importedCards |> List.map (fun card -> insert card.id card)))
         commit store uow
         ()

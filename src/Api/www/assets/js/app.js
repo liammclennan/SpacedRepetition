@@ -30,7 +30,7 @@
     euclid.start([{
         title: 'Home',        
         entry: function () {
-            if (!auth.isAuthenticated()) return [React.DOM.div(null, 'Not authenticated'), {}];
+            if (!auth.isAuthenticated()) return ['Not Authenticated', {}];
             return server.getDecks().then(function (decks) {
                 if (typeof decks == 'string') {
                     alert('problem with get decks ' + decks);//return ['Login',{}];
@@ -38,6 +38,12 @@
                 var data = {decks: decks};
                 return [components.Home(data), data];
             });
+        }
+    },{
+        title: 'Import',        
+        entry: function () {
+            if (!auth.isAuthenticated()) return ['Not Authenticated', {}];
+            return [components.Import(), {}];
         },
         actions: {
             importWiki: function (url) {
@@ -50,8 +56,17 @@
         }
     },
     {
+        title: 'Not Authenticated',
+        entry: function () {
+            if (auth.isAuthenticated()) return ['Home',{}];
+            return [components.NotAuthenticated(), {}];
+        },
+        actions: {}
+    },
+    {
         title: 'Deck',
         entry: function (urlEncoded) {
+            if (!auth.isAuthenticated()) return ['Not Authenticated', {}];
             var url = atob(decodeURIComponent(urlEncoded));
             
             return server.getDeck(url).then(function (deck) { 
@@ -84,6 +99,7 @@
         title: 'Study',
         state: 'Deck/Study',
         entry: function (deckId, urlEncoded) {
+            if (!auth.isAuthenticated()) return ['Not Authenticated', {}];
             var data = {};
             return server.getCards(deckId).then(function (cards) {
                 data.cards = cards;
@@ -121,9 +137,11 @@
         })() 
     }], document.getElementById('app'), {
         'Home': '/',
+        'Import': '/import',
         'Deck': '/deck/:url',
         'Deck/Study': '/deck/study/:deckId/:urlEncoded',
-        'Login':'/login'
+        'Login':'/login',
+        'Not Authenticated': '/notauthenticated'
     });
 });
 

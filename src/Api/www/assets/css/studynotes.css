@@ -62,3 +62,14 @@
     bottom: 5px;
     left: 5px;
 }
+
+.navbar {
+    margin-bottom: 0;
+}
+
+.hero {
+    padding-top: 100px;
+    background-image: url(../img/hands.jpg);
+    background-position: 60% 5%;
+    height: 300px;
+}
