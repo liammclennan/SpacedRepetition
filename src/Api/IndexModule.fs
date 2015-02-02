@@ -66,3 +66,9 @@ type IndexModule() as x =
             else
                 x.Response.AsJson(deck, HttpStatusCode.OK) |> box
 
+    do x.Post.["/sync/{deckId}"] <- fun p ->
+        let deckId = new System.Guid((p :?> Nancy.DynamicDictionary).["deckId"] |> string)
+        match UseCases.sync deckId (Auth.userId(x)) with
+            | UseCases.Success _ -> HttpStatusCode.OK |> box
+            | UseCases.Error m -> x.Response.AsJson(m, HttpStatusCode.InternalServerError) |> box
+

@@ -68,10 +68,12 @@ let private getSpacedRepetitionDataFromUrl url =
     let pathToFiles = FileSource.getMdFiles repoDir
     SpacedRepetition.extractSpacedRepetitionData pathToFiles 
     
-let sync (deckId:System.Guid) =
+let sync (deckId:System.Guid) (userId:System.Guid) =
     let deck = ["id", box deckId]
                 |> query<Deck> store "select [Data] from [deck] where Id = @id"
                 |> (fun decks -> if Array.isEmpty decks then failwith ("Could not find deck " + string deckId) else decks.[0])
+    if deck.userId <> userId then
+        failwith "Unable to sync someone else's deck"
     let srData = getSpacedRepetitionDataFromUrl deck.sourceUrl
     let existingCards = viewCardsByDeck deckId
     SpacedRepetition.syncCards existingCards srData deckId

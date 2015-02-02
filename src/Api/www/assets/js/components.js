@@ -118,7 +118,7 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
         render: function () {
             return R.section(null, 
                 R.h3(null, this.props.deck.name),
-                R.button(this.notImplementedProps, 'Sync Now'),
+                R.button({onClick: euclid.action.bind(euclid, 'sync', this.props.deck.id)}, 'Sync Now'),
                 R.p(null, this.props.deck.sourceUrl),
                 R.div(null, AsycContent(this.props.cards, 'Total cards ' + this.props.cards.length)),
                 R.div(null, 
@@ -203,8 +203,8 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
     var Login = React.createFactory(React.createClass({
         render: function () {
             return auth.isAuthenticated() 
-                    ? R.a({onClick: function (){auth.logout();}}, auth.user()) 
-                    : R.a({onClick: function (){navigator.id.request();}},'Log in');
+                    ? R.a({href:'#', onClick: auth.logout}, auth.user()) 
+                    : R.a({href:'#', onClick: navigator.id.request},'Log in');
         }
     }));
 

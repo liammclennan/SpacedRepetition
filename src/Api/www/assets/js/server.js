@@ -2,7 +2,8 @@
     var appUrl = ''; //window.location.protocol.indexOf("file") > -1  || window.location.host.indexOf('localhost') > -1 ? 'http://localhost:11285' : 'http://studynotesapi.azurewebsites.net';
     var serverStates = fermat({
         Cards: appUrl + '/cards/:deckId',
-        'Card/Result': appUrl + '/card/:cardId/result/:result'
+        'Card/Result': appUrl + '/card/:cardId/result/:result',
+        Sync: appUrl + '/sync/:deckId'
     });
 
     function ajaxPostOptions(data) {
@@ -14,6 +15,12 @@
     }
 
     return {
+        sync: function (deckId) {
+            return doAjaxWithErrorHandler($.ajax(
+                serverStates('Sync', {deckId:deckId}), 
+                ajaxPostOptions({})
+            ));
+        },
         authenticate: function (accessToken) {
             return doAjaxWithErrorHandler($.ajax(
                 appUrl + '/auth', 

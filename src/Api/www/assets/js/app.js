@@ -73,6 +73,11 @@
             study: function (deckId) {
                 euclid.navigate('Deck/Study', {deckId:deckId,urlEncoded:this.deckUrlEncoded});
                 return this;
+            },
+            sync: function (deckId) {
+                server.sync(deckId).then(function () {
+                    euclid.action('loadCards');
+                }.bind(this));
             }
         }
     }, {
