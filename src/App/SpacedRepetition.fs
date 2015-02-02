@@ -1,4 +1,5 @@
 module SpacedRepetition
+open PostgresDoc.Doc
 
 [<CLIMutable>]
 type Card = { id:System.Guid; front: string; back: string; created: System.DateTime; deckId: System.Guid }
@@ -47,3 +48,33 @@ let processMarkdown (cards:Card seq) =
     Seq.map (fun card -> 
         { card with front = markdowner.Transform(card.front); back = markdowner.Transform(card.back)})
         cards
+
+// Returns (q,a) pairs
+let extractSpacedRepetitionData (pathToFiles:Map<string,string> (*this is a map of path to file contents*)) =
+    pathToFiles
+        |> Map.toList
+        |> List.map (fun (path,content) -> content)
+        |> List.map Parser.parse
+        |> List.concat 
+
+let cardFromData deckId ((q,a):string * string) = 
+    { id = System.Guid.NewGuid(); front = q; back = a; created = System.DateTime.Now; deckId = deckId}
+
+let syncCards (existingCards:Card[]) (srData:(string * string) list(*[(q,a)]*)) deckId = 
+    let createCard = fun (q,a) -> 
+        match Array.filter (fun card -> card.front = q) existingCards with
+            | [||] -> Some <| insert (System.Guid.NewGuid()) (cardFromData deckId (q,a))
+            | matches -> let existingCard = matches.[0]
+                         if existingCard.back = a then 
+                            None
+                         else
+                            Some <| update existingCard.id {existingCard with back = a}
+    
+    let deletes = 
+        existingCards |> Array.filter (fun c -> List.exists (fun (q,a) -> c.front = q) srData |> not)
+        |> Array.map (fun c -> delete c.id c) 
+        |> List.ofArray
+    let updatesAndInserts = List.choose createCard srData
+    deletes @ updatesAndInserts
+
+    

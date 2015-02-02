@@ -7,7 +7,7 @@ type UseCaseResult<'a> =
     | Success of 'a
     | Error of string
 
-let private store = SqlStore System.Configuration.ConfigurationManager.ConnectionStrings.["studynotesapi_db"].ConnectionString
+let private store = SqlStore System.Configuration.ConfigurationManager.ConnectionStrings.["studynotesapi_db"].ConnectionString    
 
 let getUser (id:System.Guid) =
     ["id", box id]
@@ -51,7 +51,6 @@ let listDecks (userId:System.Guid) =
 let viewCardsByDeck id =
     ["deckId", box id]
     |> query<Card> store "select [Data] from [card] where Data.value('(/Card/deckId)[1]', 'uniqueidentifier') = @deckId"
-    |> Success
 
 let private decksByUrl url (userId:System.Guid) =
     [
@@ -64,6 +63,21 @@ let viewDeckByUrl url (userId:System.Guid) =
     decksByUrl url userId
     |> (fun a -> Array.sub a 0 1)
 
+let private getSpacedRepetitionDataFromUrl url = 
+    let repoDir = Git.fetch url
+    let pathToFiles = FileSource.getMdFiles repoDir
+    SpacedRepetition.extractSpacedRepetitionData pathToFiles 
+    
+let sync (deckId:System.Guid) =
+    let deck = ["id", box deckId]
+                |> query<Deck> store "select [Data] from [deck] where Id = @id"
+                |> (fun decks -> if Array.isEmpty decks then failwith ("Could not find deck " + string deckId) else decks.[0])
+    let srData = getSpacedRepetitionDataFromUrl deck.sourceUrl
+    let existingCards = viewCardsByDeck deckId
+    SpacedRepetition.syncCards existingCards srData deckId
+        |> commit store
+    Success ()
+
 let import url (userId:System.Guid) = 
     let trim (s:string) n =
         let shortened = s.[0..System.Math.Min(s.Length,n)]
@@ -71,26 +85,13 @@ let import url (userId:System.Guid) =
             shortened + "..."
         else
             s
-    if decksByUrl url userId |> Array.isEmpty |> not then 
+    let deckExists = decksByUrl url userId |> Array.isEmpty |> not
+    if deckExists then 
         ()
     else
-        let repoDir = Git.fetch url
-        let pathToFiles = FileSource.getMdFiles repoDir
         let deckId = System.Guid.NewGuid()
-        let importedCards = // todo move this to SpacedRepetition
-            pathToFiles
-                |> Map.toList
-                |> List.map (fun (path,content) -> content)
-                |> List.map Parser.parse
-                |> List.concat
-                |> List.map (fun (q,a) -> { id = System.Guid.NewGuid(); front = q; back = a; created = System.DateTime.Now; deckId = deckId})
-        let existingCards = 
-            [("sourceUrl", box url); ("userId",box userId)]
-            |> query<Card> store "select [card].[Data] from deck inner join card
-            on deck.Id = card.[Data].value('(/Card/deckId)[1]', 'uniqueidentifier')
-            where deck.[Data].value('(/Deck/sourceUrl)[1]', 'nvarchar(512)') = @sourceUrl
-            and deck.[Data].value('(/Deck/userId)[1]', 'uniqueidentifier') = @userId"
-        // todo build merged uow in SpacedRepetition, with nice tests
+        let importedCards = getSpacedRepetitionDataFromUrl url
+                            |> List.map (SpacedRepetition.cardFromData deckId)
         let uow = (insert deckId {id = deckId; name = trim url 25; sourceUrl = url; userId = userId} :: (importedCards |> List.map (fun card -> insert card.id card)))
         commit store uow
         ()

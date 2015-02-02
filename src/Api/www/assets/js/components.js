@@ -85,8 +85,8 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
                 R.hr({className:'star-primary'}),
                 R.form({ className: 'form-inline', onSubmit: this.import },
                     R.div({ className: 'form-group' },
-                        R.input({ type: 'text', className: 'form-control', placeholder: 'wiki git url', value: this.state.importUrl, onChange: this.bindToState('importUrl') }),
-                        R.button({className: 'btn btn-default'}, 'Import Wiki'))),
+                        R.input({ type: 'text', className: 'form-control', placeholder: 'notebook git url', value: this.state.importUrl, onChange: this.bindToState('importUrl') }),
+                        R.button({className: 'btn btn-default'}, 'Import Notebook'))),
                 
                 R.div({className: 'col-md-12', style: {'marginTop': '30'}}, 
                     this.props.decks.map(function (deck) {
@@ -124,7 +124,7 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
                 R.div(null, 
                     R.button({onClick: euclid.action.bind(euclid, 'study', this.props.deck.id), className:'btn btn-primary'}, 'Study Now'),
                     R.span(null, ' '), 
-                    R.button({onClick:function () {alert('not implemented');}, className:'btn btn-default'}, 'View Wiki')
+                    R.button({onClick:function () {alert('not implemented');}, className:'btn btn-default'}, 'View Notebook')
                 )
             );
         },

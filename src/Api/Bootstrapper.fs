@@ -39,8 +39,8 @@ type Bootstrapper() =
         ()
 
     override this.ApplicationStartup(container, pipelines: IPipelines) =
-        CookieBasedSessions.Enable(pipelines)
-        ()
+        CookieBasedSessions.Enable(pipelines) |> ignore
+        
 
 
    

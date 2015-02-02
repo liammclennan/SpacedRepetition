@@ -59,8 +59,6 @@
     function doAjaxWithErrorHandler(deferred) {
         return Q(deferred).catch(function (httpObj) {
             if (httpObj.status == 401) {
-                alert('http 401');
-                //location.hash = '/login'
                 return;
             } else {
                 console.err('An error occurred communicating with the server - ' + httpObj.statusText);
