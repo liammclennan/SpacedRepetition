@@ -63,9 +63,10 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
             sourceUrl: React.PropTypes.string.isRequired
         },
         render: function () {
-            return R.div({className: 'col-md-4 deck-list-item col-sm-6', onClick: this.go}, R.a({href: '#'}, this.props.name));
+            return R.div({className: 'col-md-4 deck-list-item col-sm-6', onClick: this.go}, R.a({href: '#', onClick: this.go}, this.props.name));
         },
-        go: function () {
+        go: function (e) {
+            e.preventDefault();
             euclid.navigate('Deck', {url: urls.encodeForPath(this.props.sourceUrl)});
         }
     }));
@@ -114,11 +115,12 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
                         R.li(null, 'Record your notes in a ', R.a({href:'http://github.com',target:'other'}, 'public git wiki')),
                         R.li(null, 'Add flash card data', 
                             R.p(null, 'Flash card data is recorded directly in the study notes, alongside the notes themselves. To specify the front of a card use:'),
-                            R.p(null, 'Q>>> Is this a good question? <<<'),
-                            R.p(null, 'A>>> Yes. Yes it is <<<')
+                            R.p({className:'well well-lg'}, 'Q>>> Is this a good question? <<<'),
+                            R.p(null, 'and for the back of the card...'),
+                            R.p({className:'well well-lg'}, 'A>>> Yes. Yes it is <<<')
                         ),
-                        R.li(null, R.a({href:'#',onClick: function (e) {navigator.id.request();e.preventDefault();}},'Login'),' to Study Notes to create your account'),
-                        R.li(null, 'Import your wiki and start studying')
+                        R.li(null, R.a({href:'#',onClick: function (e) {e.preventDefault(); navigator.id.request();}},'Login'),' to Study Notes to create your account'),
+                        R.li(null, R.a({href:'#/import'},'Import'), ' your wiki and start studying')
                     )
                 )
             );
@@ -170,11 +172,10 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
                 R.div(null, 
                     R.button({onClick: euclid.action.bind(euclid, 'study', this.props.deck.id), className:'btn btn-primary'}, 'Study Now'),
                     R.span(null, ' '), 
-                    R.button({onClick:function () {alert('not implemented');}, className:'btn btn-default'}, 'View Notebook')
+                    R.button({onClick: euclid.action.bind(euclid,'viewNotebook'), className:'btn btn-default'}, 'View Notebook')
                 )
             );
-        },
-        notImplementedProps: {onClick:function () {alert('not implemented');}, className: 'btn btn-default'}
+        }
     }));
 
     var Card = React.createFactory(React.createClass({
@@ -237,7 +238,7 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
         },
         render: function () {
             return R.div({className:'row'}, 
-                    R.div({className: 'col-md-6 col-md-offset-3'}, 
+                    R.div({className: 'col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1'}, 
                         R.section(null, 
                             this.props.cards.length 
                             ? Card(this.props.cards[this.props.index])

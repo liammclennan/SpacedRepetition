@@ -99,6 +99,18 @@
                 server.sync(deckId).then(function () {
                     euclid.action('loadCards');
                 }.bind(this));
+            },
+            viewNotebook: function () {
+                if (this.deck.sourceUrl.indexOf('bitbucket') > -1) {
+                    window.location.href = this.deck.sourceUrl;
+                }
+                if (this.deck.sourceUrl.indexOf('github') > -1) {
+                    // urls of the form https://github.com/liammclennan/PostgresDoc.wiki.git
+                    var repoSeparatorIndex = this.deck.sourceUrl.lastIndexOf('/', this.deck.sourceUrl.length-2);
+                    var prefix = this.deck.sourceUrl.slice(0, repoSeparatorIndex);
+                    var suffixComponents = this.deck.sourceUrl.slice(repoSeparatorIndex + 1).split('.');
+                    window.location.href = prefix + '/' + suffixComponents[0] + '/wiki';
+                }
             }
         }
     }, {
