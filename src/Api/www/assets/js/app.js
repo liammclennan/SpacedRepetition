@@ -64,6 +64,12 @@
         actions: {}
     },
     {
+        title: 'Get Started',
+        entry: function () {
+            return [components.GetStarted(), {}];
+        }
+    },
+    {
         title: 'Deck',
         entry: function (urlEncoded) {
             if (!auth.isAuthenticated()) return ['Not Authenticated', {}];
@@ -141,7 +147,8 @@
         'Deck': '/deck/:url',
         'Deck/Study': '/deck/study/:deckId/:urlEncoded',
         'Login':'/login',
-        'Not Authenticated': '/notauthenticated'
+        'Not Authenticated': '/notauthenticated',
+        'Get Started': '/getstarted'
     });
 });
 

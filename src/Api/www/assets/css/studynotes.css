@@ -68,8 +68,26 @@
 }
 
 .hero {
-    padding-top: 100px;
+    padding-top: 70px;
     background-image: url(../img/hands.jpg);
     background-position: 60% 5%;
-    height: 300px;
+    height: 270px;
+}
+
+.copy > p {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+li {
+    font-size: 20px;
+}
+
+li > p {
+    margin-top: 10px;
+
+}
+
+.get-started-list > li {
+    margin-top: 25px;
 }

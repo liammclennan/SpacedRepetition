@@ -44,7 +44,7 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li>
+                    <li class="authed-menu-item" style="display:none;">
                         <a href="#/import">Import</a>
                     </li>
                     <li id="login"></li>
@@ -80,6 +80,10 @@
         (function () { 
             React.render(require('components').Login(), document.getElementById('login'));
             require('app');
+            var auth = require('auth');
+            if (auth.isAuthenticated()) {
+                $('.authed-menu-item').show();
+            }
          })();
     </script>
   </body>

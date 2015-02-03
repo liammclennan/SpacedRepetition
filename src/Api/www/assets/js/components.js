@@ -76,7 +76,7 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
             decks: React.PropTypes.array.isRequired
         },
         render: function () {
-            return R.div({className:'row'},R.section(
+            return R.div({className:'row'}, R.section(
                 {className:'text-center'},
                 R.h2({ className:""}, 'Notebooks'),
                 R.hr({className:'star-primary'}),                
@@ -92,11 +92,36 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
 
     var NotAuthenticated = React.createFactory(React.createClass({
         render: function () {
-            return R.section(
-                {className:'row text-center hero'},
-                R.h2({ className:""}, 'Study Notes and Spaced Repetition'),
-                R.hr({className:'star-primary'}),                
-                R.div({className: 'col-md-12'},  ''));
+            return R.div(null, R.section(
+                {className:'row text-center hero hidden-xs'},
+                R.h2({ className:""}, 'Study notes and flash cards'),
+                R.hr({className:'star-primary'})),                
+                R.div({className: 'col-md-6 copy'},  
+                    R.p(null,'Study Notes is an easy place to keep your study notes and flash cards.'),
+                    R.p(null, 'Study notes uses ', R.a({href:'http://en.wikipedia.org/wiki/Spaced_repetition',target:'other'},'spaced repetition'), ' - a learning technique that incorporates increasing intervals of time between subsequent review of previously learned material.'),
+                    R.div(null, R.a({href: '#/getstarted', className:'btn btn-primary'}, 'Get Started'))),
+                R.div({className:'col-md-6 hidden-xs copy'},
+                    R.p(null, R.img({src:'assets/img/mlkcard.png', style: {width: 350}}))));
+        }
+    }));
+
+    var GetStarted = React.createFactory(React.createClass({
+        render: function () {
+            return R.div({className:'row'},
+                R.div({className:'col-md-6'}, 
+                    R.h3(null, 'Getting Started'),
+                    R.ul({className:'get-started-list'}, 
+                        R.li(null, 'Record your notes in a ', R.a({href:'http://github.com',target:'other'}, 'public git wiki')),
+                        R.li(null, 'Add flash card data', 
+                            R.p(null, 'Flash card data is recorded directly in the study notes, alongside the notes themselves. To specify the front of a card use:'),
+                            R.p(null, 'Q>>> Is this a good question? <<<'),
+                            R.p(null, 'A>>> Yes. Yes it is <<<')
+                        ),
+                        R.li(null, R.a({href:'#',onClick: function (e) {navigator.id.request();e.preventDefault();}},'Login'),' to Study Notes to create your account'),
+                        R.li(null, 'Import your wiki and start studying')
+                    )
+                )
+            );
         }
     }));
 
@@ -232,6 +257,7 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
     return {
         Home: Home,
         NotAuthenticated: NotAuthenticated,
+        GetStarted: GetStarted,
         Import: Import,
         Deck: Deck,
         Study: Study,
