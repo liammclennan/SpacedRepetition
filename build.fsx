@@ -1,5 +1,6 @@
 #r @"src/packages/FAKE.3.14.9/tools/FakeLib.dll"
 open Fake
+open System.IO
 
 let buildDir = "./build/"
 let testDir   = "./test/"
@@ -13,6 +14,10 @@ Target "BuildApp" (fun _ ->
     !! "src/App/*.fsproj" ++ "src/Api/*.fsproj"
       |> MSBuildRelease buildDir "Build"
       |> Log "AppBuild-Output: "
+)
+
+Target "CopyWWW" (fun _ -> 
+    XCopy "src/Api/www" (buildDir + "/_PublishedWebsites/Api/www")
 )
 
 Target "BuildTest" (fun _ ->
@@ -33,10 +38,11 @@ Target "Test" (fun _ ->
              OutputFile = testDir + "TestResults.xml" })
 )
 
-Target "Zip" (fun _ ->
-    !! (buildDir + "/_PublishedWebsites/Api/**/*.*")
-        -- "*.zip"
-        |> Zip (buildDir + "/_PublishedWebsites/Api") (deployDir + "StudyNotes.zip")
+Target "UpdateConfig" (fun _ ->    
+    ConfigurationHelper.updateConnectionString 
+        "studynotesapi_db" 
+        (sprintf "Server=tcp:fg0ifdk15o.database.windows.net,1433;Database=studynotesapi_db;User ID=studynotes@fg0ifdk15o;Password=%s;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;" (File.ReadAllText "pw.txt"))
+        (buildDir + "/_PublishedWebsites/Api/Web.config")   
 )
 
 // Dependencies
@@ -44,7 +50,8 @@ Target "Zip" (fun _ ->
   ==> "BuildApp"
   ==> "BuildTest"
   ==> "Test"
-  ==> "Zip"
+  ==> "CopyWWW"
+  ==> "UpdateConfig"
   ==> "Default"
 
 // start build

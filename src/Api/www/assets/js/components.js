@@ -63,7 +63,9 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
             sourceUrl: React.PropTypes.string.isRequired
         },
         render: function () {
-            return R.div({className: 'col-md-4 deck-list-item col-sm-6', onClick: this.go}, R.a({href: '#', onClick: this.go}, this.props.name));
+            return R.div({className: 'col-md-4 col-sm-6', onClick: this.go}, 
+                R.div({className: 'deck-list-item'},
+                    R.a({href: '#', onClick: this.go}, this.props.name)));
         },
         go: function (e) {
             e.preventDefault();
@@ -77,11 +79,11 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
             decks: React.PropTypes.array.isRequired
         },
         render: function () {
-            return R.div({className:'row'}, R.section(
-                {className:'text-center'},
+            return R.div({className:'row'}, R.div(
+                {className:'text-center col-md-12'},
                 R.h2({ className:""}, 'Notebooks'),
                 R.hr({className:'star-primary'}),                
-                R.div({className: 'col-md-12', style: {'marginTop': '30'}}, 
+                R.div({className: 'row', style: {'marginTop': '30'}}, 
                     this.props.decks.map(function (deck) {
                         deck.key = deck.id;
                         return DeckListItem(deck);
