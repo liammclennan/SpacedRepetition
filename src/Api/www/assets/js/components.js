@@ -114,7 +114,10 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
                 R.div({className:'col-md-6'}, 
                     R.h3(null, 'Getting Started'),
                     R.ul({className:'get-started-list'}, 
-                        R.li(null, 'Record your notes in a ', R.a({href:'http://github.com',target:'other'}, 'public git wiki')),
+                        R.li(null, 'Record your notes in a ', 
+                            R.a({href:'http://github.com',target:'other'}, 'public git wiki'),
+                            R.p(null, 
+                                R.a({href:'https://github.com/liammclennan/maths/wiki',target:'other'}, 'This is an example of a public git wiki'))),   
                         R.li(null, 'Add flash card data', 
                             R.p(null, 'Flash card data is recorded directly in the study notes, alongside the notes themselves. To specify the front of a card use:'),
                             R.p({className:'well well-lg'}, 'Q>>> Is this a good question? <<<'),
@@ -122,7 +125,9 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
                             R.p({className:'well well-lg'}, 'A>>> Yes. Yes it is <<<')
                         ),
                         R.li(null, R.a({href:'#',onClick: function (e) {e.preventDefault(); navigator.id.request();}},'Login'),' to Study Notes to create your account'),
-                        R.li(null, R.a({href:'#/import'},'Import'), ' your wiki and start studying')
+                        R.li(null, 
+                            R.a({href:'#/import'},'Import'), 
+                            ' your wiki and start studying')
                     )
                 )
             );
