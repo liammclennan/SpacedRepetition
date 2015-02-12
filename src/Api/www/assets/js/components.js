@@ -59,17 +59,16 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
 
     var DeckListItem = React.createFactory(React.createClass({
         propTypes: {
-            name: React.PropTypes.string.isRequired,
-            sourceUrl: React.PropTypes.string.isRequired
+            deck: React.PropTypes.object.isRequired
         },
         render: function () {
             return R.div({className: 'col-md-4 col-sm-6', onClick: this.go}, 
                 R.div({className: 'deck-list-item'},
-                    R.a({href: '#', onClick: this.go}, this.props.name)));
+                    R.a({href: '#', onClick: this.go}, this.props.deck.name + ' ', R.span({className: 'badge'}, this.props.count))));
         },
         go: function (e) {
             e.preventDefault();
-            euclid.navigate('Deck', {url: urls.encodeForPath(this.props.sourceUrl)});
+            euclid.navigate('Deck', {url: urls.encodeForPath(this.props.deck.sourceUrl)});
         }
     }));
 
@@ -84,9 +83,9 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
                 R.h2({ className:""}, 'Notebooks'),
                 R.hr({className:'star-primary'}),                
                 R.div({className: 'row', style: {'marginTop': '30'}}, 
-                    this.props.decks.map(function (deck) {
-                        deck.key = deck.id;
-                        return DeckListItem(deck);
+                    this.props.decks.map(function (deckWithCount) {
+                        deckWithCount.key = deckWithCount.deck.id;
+                        return DeckListItem(deckWithCount);
                     })
                 )
             ));

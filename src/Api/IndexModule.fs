@@ -34,11 +34,11 @@ type IndexModule() as x =
             HttpStatusCode.Unauthorized |> box
         else
             let deckId = (parameters :?> Nancy.DynamicDictionary).["deckid"] |> string
-            let deck = deckId |> UseCases.cardsForStudy
+            let deck = UseCases.cardsForStudy (userId(x)) deckId
             match deck with
                 | UseCases.Success cs ->                 
                     x.Response.AsJson(SpacedRepetition.processMarkdown cs, HttpStatusCode.OK) |> box
-                | UseCases.Error e -> x.Response.AsJson("", HttpStatusCode.InternalServerError) |> box
+                | UseCases.Error e -> x.Response.AsJson(e, HttpStatusCode.InternalServerError) |> box
 
     do x.Post.["/card/{cardId}/result/{result}"] <- fun p ->
         if Auth.isAuthenticated(x) |> not then

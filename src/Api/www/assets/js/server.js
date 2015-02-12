@@ -14,6 +14,20 @@
         };
     }
 
+    function mapSerializedTuple(keyNames) {
+        return function (tuple) {
+            var o = {};
+            keyNames.forEach(function (key,i) {
+                o[key] = tuple['item' + (i+1)];
+            });
+            return o;
+        };
+    }
+
+    function mapSerializedTuples(keyNames, tuples) {
+        return tuples.map(mapSerializedTuple(keyNames))
+    }
+
     return {
         sync: function (deckId) {
             return doAjaxWithErrorHandler($.ajax(
@@ -45,7 +59,7 @@
         getDecks: function () {
             return doAjaxWithErrorHandler($.ajax(
                 appUrl + '/decks'
-            ));
+            )).then(mapSerializedTuples.bind(null, ['deck', 'count']));
         },
         getCards: function (deckId) {
             return doAjaxWithErrorHandler($.ajax(
