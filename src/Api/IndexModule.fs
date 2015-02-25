@@ -8,6 +8,8 @@ open Auth
 
 [<CLIMutable>]
 type Url = {url:string}
+[<CLIMutable>]
+type DeckName = {name:string}
 
 type IndexModule() as x =
     inherit NancyModule()
@@ -65,6 +67,16 @@ type IndexModule() as x =
                 box HttpStatusCode.NotFound
             else
                 x.Response.AsJson(deck, HttpStatusCode.OK) |> box
+
+    do x.Post.["/deck/{deckId}/name"] <- fun p ->
+        if not <| Auth.isAuthenticated(x) then
+            HttpStatusCode.Unauthorized |> box
+        else
+            let deckId = new System.Guid((p :?> Nancy.DynamicDictionary).["deckId"] |> string)
+            let {name = name} = x.Bind<DeckName>()
+            match UseCases.changeDeckName deckId name with
+                | UseCases.Success _ -> x.Response.AsJson("") |> box
+                | UseCases.Error e -> x.Response.AsJson(e) |> box
 
     do x.Post.["/sync/{deckId}"] <- fun p ->
         if not <| Auth.isAuthenticated(x) then

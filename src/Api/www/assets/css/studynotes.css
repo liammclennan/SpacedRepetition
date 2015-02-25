@@ -54,6 +54,7 @@
     -webkit-border-radius:4px 4px 4px 4px;
     background-color: #eee;
     border: 2px solid #eee;
+    margin-top:10px;
 }
 
 .deck-list-item:hover {

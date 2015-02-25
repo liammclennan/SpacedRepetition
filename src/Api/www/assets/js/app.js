@@ -26,7 +26,7 @@
     };
 
     auth.watch();
-    
+
     euclid.start([{
         title: 'Home',        
         entry: function () {
@@ -111,6 +111,10 @@
                     var suffixComponents = this.deck.sourceUrl.slice(repoSeparatorIndex + 1).split('.');
                     window.location.href = prefix + '/' + suffixComponents[0] + '/wiki';
                 }
+            },
+            saveNameChange: function (name) {
+                server.changeDeckName(this.deck.id, name);
+                return this;
             }
         }
     }, {

@@ -3,7 +3,8 @@
     var serverStates = fermat({
         Cards: appUrl + '/cards/:deckId',
         'Card/Result': appUrl + '/card/:cardId/result/:result',
-        Sync: appUrl + '/sync/:deckId'
+        Sync: appUrl + '/sync/:deckId',
+        'Deck/Name': appUrl + '/deck/:deckId/name'
     });
 
     function ajaxPostOptions(data) {
@@ -74,6 +75,9 @@
             $.ajax(serverStates('Card/Result', {cardId:cardId, result:'hard'}), {
                 type: 'POST'
             });
+        },
+        changeDeckName: function (deckId, name) {
+            return doAjaxWithErrorHandler($.ajax(serverStates('Deck/Name',{deckId:deckId}), ajaxPostOptions({ name: name })));
         }
     };
 

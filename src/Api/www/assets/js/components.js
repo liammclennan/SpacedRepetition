@@ -169,19 +169,41 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
         componentWillMount: function () {
             euclid.action('loadCards');
         },
+        getInitialState: function () {
+            return {
+                name: this.props.deck.name,
+                editingName:false
+            };
+        },
         render: function () {
             return R.section(null, 
-                R.button({onClick: euclid.action.bind(euclid, 'sync', this.props.deck.id), className:'btn btn-default pull-right'}, 'Sync Now'),
-                R.h3(null, this.props.deck.name),                
+                
+                this.state.editingName 
+                    ? R.div(null,
+                        R.div({className: 'col-xs-10'}, R.input({className: 'form-control', type:'text', value:this.state.name,  onChange: this.bindToState('name')})),
+                        R.div({className: 'col-xs-2'}, R.button({className: 'btn btn-primary',onClick:this.saveNameClicked}, 'Save')))
+
+                    
+                    : R.h3({onClick: this.titleClicked}, this.state.name),                
                 R.p(null, this.props.deck.sourceUrl),
                 R.div(null, AsycContent(this.props.cards, 'Total cards ' + this.props.cards.length)),
                 R.div(null, 
                     R.button({onClick: euclid.action.bind(euclid, 'study', this.props.deck.id), className:'btn btn-primary'}, 'Study Now'),
                     R.span(null, ' '), 
-                    R.button({onClick: euclid.action.bind(euclid,'viewNotebook'), className:'btn btn-default'}, 'View Notebook')
+                    R.button({onClick: euclid.action.bind(euclid,'viewNotebook'), className:'btn btn-default'}, 'View Notebook'),
+                    R.span(null, ' '),
+                    R.button({onClick: euclid.action.bind(euclid, 'sync', this.props.deck.id), className:'btn btn-default'}, 'Sync Now')
                 )
             );
-        }
+        },
+        titleClicked: function () {
+            this.setState({editingName: !this.state.editingName});
+        },
+        saveNameClicked: function () {
+            this.setState({editingName: !this.state.editingName});
+            euclid.action('saveNameChange', this.state.name);
+        },
+        mixins: [formMixin]
     }));
 
     var Card = React.createFactory(React.createClass({
@@ -217,8 +239,11 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
                         this.state.showingFront ? '' : R.li(null, 'right arrow = easy')))
             );
         },
+        componentDidMount: function () {
+            MathJax.Hub.Queue(["Typeset",MathJax.Hub,'card']);
+        },
         componentDidUpdate: function (prevProps, prevState) {
-                MathJax.Hub.Queue(["Typeset",MathJax.Hub,'card']);
+            MathJax.Hub.Queue(["Typeset",MathJax.Hub,'card']);
         },
         clicked: function () {
             this.setState({showingFront: !this.state.showingFront});

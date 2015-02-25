@@ -25,6 +25,16 @@ let getOrCreateUser (email:string) =
         | [|user|] -> user
         | _ -> failwith "There are > 1 users with the same email address"
 
+let changeDeckName (deckId:System.Guid) (name:string) = 
+    let decks = ["deckId", box deckId] 
+               |> query<Deck> store @"select [Data] from [deck] where id = @deckId"
+    if Array.length decks <> 1 then
+        Error "Unable to find deck to update"
+    else
+        let deck = decks.[0]
+        commit store [update deck.id {deck with name = name}]
+        Success ()
+
 let persistResult cardId (result:CardResult) =
     let logId = System.Guid.NewGuid()
     [insert logId {id = logId; ``when`` = System.DateTime.Now; result = result; cardId = cardId}]
@@ -49,34 +59,31 @@ where Data.value('(/StudyLog/cardId)[1]', 'uniqueidentifier') in (
     SpacedRepetition.selectForStudy allCards studyLogs System.DateTime.Now
         |> Success    
 
-let private decksWithCardsDue (userId:System.Guid) =
-    let logs = ["userId", box userId] 
-               |> query<StudyLog> store "
-select sl.Data from deck d
-inner join [card] c on c.Data.value('(/Card/deckId)[1]','uniqueidentifier') = d.Id
-inner join [studylog] sl on sl.Data.value('(/StudyLog/cardId)[1]','uniqueidentifier') = c.Id
-where d.Data.value('(/Deck/userId)[1]', 'uniqueidentifier') = @userId"
-    let cardsByDeckId = [("userId", box userId)]
-                        |> query<Card> store "
-select c.[Data] from [card] c
-inner join deck d on c.Data.value('(/Card/deckId)[1]', 'uniqueidentifier') = d.Id
-and d.Data.value('(/Deck/userId)[1]', 'uniqueidentifier') = @userId
-"                       |> Seq.groupBy (fun card -> card.deckId) |> dict
-    Seq.map 
-        (fun deckId -> 
-            deckId, Array.length (SpacedRepetition.selectForStudy (Array.ofSeq cardsByDeckId.[deckId]) logs System.DateTime.Now)) 
-            cardsByDeckId.Keys
-            |> Map.ofSeq
-
 let listDecks (userId:System.Guid) = 
+    let decksWithCardsDue (userId:System.Guid) =
+        let logs = ["userId", box userId] 
+                   |> query<StudyLog> store "
+    select sl.Data from deck d
+    inner join [card] c on c.Data.value('(/Card/deckId)[1]','uniqueidentifier') = d.Id
+    inner join [studylog] sl on sl.Data.value('(/StudyLog/cardId)[1]','uniqueidentifier') = c.Id
+    where d.Data.value('(/Deck/userId)[1]', 'uniqueidentifier') = @userId"
+        let cardsByDeckId = [("userId", box userId)]
+                            |> query<Card> store "
+    select c.[Data] from [card] c
+    inner join deck d on c.Data.value('(/Card/deckId)[1]', 'uniqueidentifier') = d.Id
+    and d.Data.value('(/Deck/userId)[1]', 'uniqueidentifier') = @userId
+    "                       |> Seq.groupBy (fun card -> card.deckId) |> dict
+        Seq.map 
+            (fun deckId -> 
+                deckId, Array.length (SpacedRepetition.selectForStudy (Array.ofSeq cardsByDeckId.[deckId]) logs System.DateTime.Now)) 
+                cardsByDeckId.Keys
+                |> Map.ofSeq
+
     let dueCounts = decksWithCardsDue userId
     ["userId", box userId]
     |> query<Deck> store "select [Data] from deck where Data.value('(/Deck/userId)[1]', 'uniqueidentifier') = @userId"
     |> Array.map (fun deck -> deck, if dueCounts.ContainsKey(deck.id) then dueCounts.[deck.id] else 0) 
 
-let private viewCardsByDeck id =
-    ["deckId", box id]
-    |> query<Card> store "select [Data] from [card] where Data.value('(/Card/deckId)[1]', 'uniqueidentifier') = @deckId"
 
 let private decksByUrl url (userId:System.Guid) =
     [
@@ -95,6 +102,10 @@ let private getSpacedRepetitionDataFromUrl url =
     SpacedRepetition.extractSpacedRepetitionData pathToFiles 
     
 let sync (deckId:System.Guid) (userId:System.Guid) =
+    let viewCardsByDeck id =
+        ["deckId", box id]
+        |> query<Card> store "select [Data] from [card] where Data.value('(/Card/deckId)[1]', 'uniqueidentifier') = @deckId"
+
     let deck = ["id", box deckId]
                 |> query<Deck> store "select [Data] from [deck] where Id = @id"
                 |> (fun decks -> if Array.isEmpty decks then failwith ("Could not find deck " + string deckId) else decks.[0])
