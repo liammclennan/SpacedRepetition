@@ -836,6 +836,16 @@
             Only types that are defined outside the Nancy assembly.
             </summary>
         </member>
+        <member name="F:Nancy.Bootstrapper.ScanMode.OnlyNancyNamespace">
+            <summary>
+            Only Namespaces that starts with 'Nancy'
+            </summary>
+        </member>
+        <member name="F:Nancy.Bootstrapper.ScanMode.ExcludeNancyNamespace">
+            <summary>
+            Only Namespaces that does not start with Nancy
+            </summary>
+        </member>
         <member name="T:Nancy.Conventions.AcceptHeaderCoercionConventions">
             <summary>
             Collection of accept header coercions
@@ -1093,7 +1103,7 @@
         </member>
         <member name="M:Nancy.Conventions.StaticContentConventionBuilder.AddFile(System.String,System.String)">
             <summary>
-            Adds a directory-based convention for static convention.
+            Adds a file-based convention for static convention.
             </summary>
             <param name="requestedFile">The file that should be matched with the request.</param>
             <param name="contentFile">The file that should be served when the requested path is matched.</param>
@@ -5202,6 +5212,17 @@
             <param name="segment">Segment</param>
             <returns>TrieNode instance</returns>
         </member>
+        <member name="T:Nancy.Security.SSLProxy">
+            <summary>
+            Allows a BeforeRequest hook to change Url to HTTPS if X-Forwarded-Proto header present
+            </summary>
+        </member>
+        <member name="M:Nancy.Security.SSLProxy.RewriteSchemeUsingForwardedHeaders(Nancy.Bootstrapper.IPipelines)">
+            <summary>
+            Checks for Forwarded or X-Forwarded-Proto header and if so makes current url scheme https
+            </summary>
+            <param name="pipelines">Application pipelines</param>
+        </member>
         <member name="T:Nancy.Session.CookieBasedSessionsConfiguration">
             <summary>
             Configuration options for cookie based sessions
@@ -5273,7 +5294,14 @@
             </summary>
             <param name="pipelines">The pipelines to hook into</param>
         </member>
-        <!-- Badly formed XML comment ignored for member "T:Nancy.Conventions.ViewLocationConventions" -->
+        <member name="T:Nancy.Conventions.ViewLocationConventions">
+            <summary>
+            This is a wrapper around the type
+            <c>IEnumerable&lt;Func&lt;string, object, ViewLocationContext, string&gt;&gt;</c> and its
+            only purpose is to make Ninject happy which was throwing an exception
+            when constructor injecting this type.
+            </summary>
+        </member>
         <member name="M:Nancy.Cryptography.Base64Helpers.GetBase64Length(System.Int32)">
             <summary>
             Calculates how long a byte array of X length will be after base64 encoding

@@ -1,5 +1,6 @@
 ﻿namespace StudyNotes
 
+open System
 open System.IO
 open Nancy
 open Nancy.TinyIoc
@@ -9,6 +10,7 @@ open Serilog
 open Nancy.Responses
 open Nancy.Security
 open Nancy.Session
+open Nancy.Authentication.Forms
 
 type Bootstrapper() =
     inherit DefaultNancyBootstrapper()
@@ -39,6 +41,15 @@ type Bootstrapper() =
         ()
 
     override this.ApplicationStartup(container, pipelines: IPipelines) =
+        let conf = new FormsAuthenticationConfiguration() 
+        conf.RedirectUrl <- "~/login"
+        conf.UserMapper <- { new IUserMapper with 
+                                member x.GetUserFromIdentifier((identifier:Guid), (context:NancyContext)) = 
+                                    { new IUserIdentity with 
+                                        member y.UserName = identifier.ToString()
+                                        member y.Claims = Seq.empty }
+                                }
+        FormsAuthentication.Enable(pipelines, conf)
         CookieBasedSessions.Enable(pipelines) |> ignore
         
 

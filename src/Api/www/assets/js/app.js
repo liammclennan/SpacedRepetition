@@ -6,8 +6,7 @@
     $.ajaxSetup({
         statusCode: {
             401: function(){
-                auth.logout();
-                window.location.href = '/';
+                window.location.href = '/login';
             }
         },
         cache: false
@@ -25,24 +24,36 @@
        toastr.error(msg, 'An error occurred'); 
     };
 
-    auth.watch();
-
     euclid.start([{
         title: 'Home',        
         entry: function () {
-            if (!auth.isAuthenticated()) return ['Not Authenticated', {}];
             return server.getDecks().then(function (decks) {
-                if (typeof decks == 'string') {
-                    alert('problem with get decks ' + decks);//return ['Login',{}];
-                }
                 var data = {decks: decks};
                 return [components.Home(data), data];
+            }, function () {
+                return [components.NotAuthenticated(), {}];
             });
         }
-    },{
+    },
+    {
+        title: 'Login',        
+        entry: function () {
+            var data = {};
+            return [components.LoginPage(data), data];
+        },
+        actions: {
+            login: function (email) {
+                var props = this;
+                return server.login(email).then(function () {
+                    props.message = "An login email has been sent to your email address " + email + '. Check your email and follow the login link.';
+                    return props;
+                });
+            }
+        }
+    },
+    {
         title: 'Import',        
         entry: function () {
-            if (!auth.isAuthenticated()) return ['Not Authenticated', {}];
             return [components.Import(), {}];
         },
         actions: {
@@ -58,7 +69,7 @@
     {
         title: 'Not Authenticated',
         entry: function () {
-            if (auth.isAuthenticated()) return ['Home',{}];
+            if (false) return ['Home',{}];
             return [components.NotAuthenticated(), {}];
         },
         actions: {}
@@ -72,9 +83,7 @@
     {
         title: 'Deck',
         entry: function (urlEncoded) {
-            if (!auth.isAuthenticated()) return ['Not Authenticated', {}];
-            var url = atob(decodeURIComponent(urlEncoded));
-            
+            var url = atob(decodeURIComponent(urlEncoded));            
             return server.getDeck(url).then(function (deck) { 
                 var data = {
                     deck:deck,
@@ -121,7 +130,6 @@
         title: 'Study',
         state: 'Deck/Study',
         entry: function (deckId, urlEncoded) {
-            if (!auth.isAuthenticated()) return ['Not Authenticated', {}];
             var data = {};
             return server.getCards(deckId).then(function (cards) {
                 data.cards = cards;

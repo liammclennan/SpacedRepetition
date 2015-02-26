@@ -72,6 +72,32 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
         }
     }));
 
+    var LoginPage = React.createFactory(React.createClass({
+        getInitialState: function () {
+            return {email:''};
+        },
+        render: function () {
+            return R.section(
+                {className:'text-center'},
+                R.h2(null, 'Login'),
+                R.hr({className:'star-primary'}),
+                this.props.message ? this.props.message :
+                R.form({ className: 'form-inline', onSubmit: this.import },
+                    R.div({ className: 'form-group' },
+                        R.input({ type: 'text', className: 'form-control', placeholder: 'email', value: this.state.email, onChange: this.bindToState('email') }),
+                        R.button({className: 'btn btn-default'}, 'Login')
+                    )
+                )
+            );
+        },
+        'import': function (e) {
+            e.preventDefault();
+            euclid.action('login', this.state.email);
+        },
+        mixins: [formMixin]
+    }));
+
+
     var Home = React.createFactory(React.createClass({
         displayName: 'Home',        
         propTypes: {
@@ -278,14 +304,6 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
         }
     }));
 
-    var Login = React.createFactory(React.createClass({
-        render: function () {
-            return auth.isAuthenticated() 
-                    ? R.a({href:'#', onClick: auth.logout.bind(auth)}, auth.user()) 
-                    : R.a({href:'#', onClick: function () {navigator.id.request();}},'Log in');
-        }
-    }));
-
     return {
         Home: Home,
         NotAuthenticated: NotAuthenticated,
@@ -293,6 +311,6 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
         Import: Import,
         Deck: Deck,
         Study: Study,
-        Login: Login
+        LoginPage: LoginPage
     };
 });

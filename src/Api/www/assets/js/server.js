@@ -4,7 +4,8 @@
         Cards: appUrl + '/cards/:deckId',
         'Card/Result': appUrl + '/card/:cardId/result/:result',
         Sync: appUrl + '/sync/:deckId',
-        'Deck/Name': appUrl + '/deck/:deckId/name'
+        'Deck/Name': appUrl + '/deck/:deckId/name',
+        Login: appUrl + '/login'
     });
 
     function ajaxPostOptions(data) {
@@ -40,6 +41,14 @@
             return doAjaxWithErrorHandler($.ajax(
                 appUrl + '/auth', 
                 ajaxPostOptions({ accessToken: accessToken })
+            ));
+        },
+        login: function (email) {
+            return doAjaxWithErrorHandler($.ajax(
+                serverStates('Login'), {
+                    type: 'POST',
+                    data: {email:email}
+                }
             ));
         },
         importGitWiki: function (url) {
