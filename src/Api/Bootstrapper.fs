@@ -9,7 +9,6 @@ open Nancy.Conventions
 open Serilog
 open Nancy.Responses
 open Nancy.Security
-open Nancy.Session
 open Nancy.Authentication.Forms
 
 type Bootstrapper() =
@@ -50,7 +49,6 @@ type Bootstrapper() =
                                         member y.Claims = Seq.empty }
                                 }
         FormsAuthentication.Enable(pipelines, conf)
-        CookieBasedSessions.Enable(pipelines) |> ignore
         
 
 
