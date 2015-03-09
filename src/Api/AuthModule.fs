@@ -26,7 +26,7 @@ type AuthModule() as x =
             let response = 
                 createRequest Post "http://localhost:11286/auth" 
                 |> withHeader (ContentType "application/x-www-form-urlencoded")
-                |> withBody (sprintf "requestToken=%s&email=%s&redirectUrl=%s" "werqrfdsfasdf" email "/")
+                |> withBody (sprintf "requestToken=%s&email=%s&redirectUrl=%s" (Nancy.Helpers.HttpUtility.UrlEncode("oq2ZXnWW1d5a8ccc29cb3e247f491dee798e2751ffevfLhXW6yKEv")) email "/")
                 |> getResponse
             match response.StatusCode with
                 | 200 -> HttpStatusCode.OK |> box
@@ -43,7 +43,7 @@ type AuthModule() as x =
             x.Response.AsText("Missing authentication token").WithStatusCode(400) |> box
         else
             try
-                let data = JWT.JsonWebToken.DecodeToObject(jwtToken, "fsoiufoocxvxp", true) :?> System.Collections.Generic.IDictionary<string, obj> 
+                let data = JWT.JsonWebToken.DecodeToObject(jwtToken, "cgmmCJuDr4M18dc8f037baf462bbbe67fa96de5b426BYDFwmZZlIT", true) :?> System.Collections.Generic.IDictionary<string, obj> 
                 let email = string data.["email"]
                 if String.IsNullOrWhiteSpace(email) then
                     x.Response.AsText("Missing email").WithStatusCode(400) |> box

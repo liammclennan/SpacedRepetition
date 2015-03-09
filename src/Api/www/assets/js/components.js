@@ -149,7 +149,7 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
                             R.p(null, 'and for the back of the card...'),
                             R.p({className:'well well-lg'}, 'A>>> Yes. Yes it is <<<')
                         ),
-                        R.li(null, R.a({href:'#',onClick: function (e) {e.preventDefault(); navigator.id.request();}},'Login'),' to Study Notes to create your account'),
+                        R.li(null, R.a({href:'#/login'},'Login'),' to Study Notes to create your account'),
                         R.li(null, 
                             R.a({href:'#/import'},'Import'), 
                             ' your wiki and start studying')
