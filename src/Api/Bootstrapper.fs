@@ -49,6 +49,8 @@ type Bootstrapper() =
                                         member y.Claims = Seq.empty }
                                 }
         FormsAuthentication.Enable(pipelines, conf)
+        StaticConfiguration.DisableErrorTraces <- false
+        UseCases.init()
         
 
 

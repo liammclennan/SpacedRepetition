@@ -1,5 +1,5 @@
 module SpacedRepetition
-open PostgresDoc.Doc
+open PostgresDoc
 
 [<CLIMutable>]
 type Card = { id:System.Guid; front: string; back: string; created: System.DateTime; deckId: System.Guid }

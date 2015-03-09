@@ -4,10 +4,9 @@ open System.IO
 
 let buildDir = "./build/"
 let testDir   = "./test/"
-let deployDir = "./deploy/"
 
 Target "Clean" (fun _ ->
-    CleanDirs [buildDir; testDir; deployDir]
+    CleanDirs [buildDir; testDir]
 )
 
 Target "BuildApp" (fun _ ->
@@ -41,7 +40,7 @@ Target "Test" (fun _ ->
 Target "UpdateConfig" (fun _ ->    
     ConfigurationHelper.updateConnectionString 
         "studynotesapi_db" 
-        (sprintf "Server=tcp:fg0ifdk15o.database.windows.net,1433;Database=studynotesapi_db;User ID=studynotes@fg0ifdk15o;Password=%s;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;" (File.ReadAllText "pw.txt"))
+        (sprintf "Server=tcp:q7et4k1vyb.database.windows.net,1433;Database=studynotes;User ID=simpleauthdata@q7et4k1vyb;Password=%s;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;" (File.ReadAllText "pw.txt"))
         (buildDir + "/_PublishedWebsites/Api/Web.config")   
 )
 
