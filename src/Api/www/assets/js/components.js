@@ -109,10 +109,15 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
                 R.h2({ className:""}, 'Notebooks'),
                 R.hr({className:'star-primary'}),                
                 R.div({className: 'row', style: {'marginTop': '30'}}, 
-                    this.props.decks.map(function (deckWithCount) {
+                    this.props.decks.length 
+                    ? this.props.decks.map(function (deckWithCount) {
                         deckWithCount.key = deckWithCount.deck.id;
                         return DeckListItem(deckWithCount);
                     })
+                    : [R.p({key:1}, 
+                        "You do not have any notebooks. Why not ",
+                        R.a({href:'#/import'}, "import a notebook"), "?"
+                    ), R.p({key:2}, 'or ', R.button({className:'btn btn-default', onClick: euclid.action.bind(euclid, 'importDemo')},'Load a demo notebook'))]
                 )
             ));
         }
@@ -304,6 +309,34 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
         }
     }));
 
+    var Help = React.createFactory(React.createClass({
+        displayName: 'Study',
+        propTypes: {
+            index: React.PropTypes.number.isRequired,
+            cards: React.PropTypes.array.isRequired
+        },
+        render: function () {
+            return R.div({className:'row'}, 
+                    R.div({className: 'col-md-12'}, 
+                        R.section({className:'text-center'},
+                            R.h2(null, 'Help'),
+                            R.hr({className:'star-primary'})),
+                        R.section(null, 
+                            R.h2(null, "Notebooks"),
+                            R.p(null, 'Notebooks are collections of flash cards. Each notebook is bound to a ',
+                                R.a({href:'http://en.wikipedia.org/wiki/Wiki',target:'other'}, 'wiki'),
+                                ' via the git interface.'),
+                            R.p(null, 'The easiest way to create a new git wiki for use with study notes is to ',
+                                R.a({href:'https://github.com/',target:'other'}, 'signup for a free account with github'), 
+                                ' and create a new git repository with a wiki. Once you have a wiki you can copy its clone url from github (see image below).'),
+                            R.img({src:'assets/img/githubclone.gif',style:{'boxShadow': '3px 3px 10px #888888;',border:'1px solid #666;',margin:'20px;'}}),
+                            R.p(null,'Once you have a git wiki url you can create a notebook using the ',
+                                R.a({href:'#/import'}, 'import'), 'function.')
+                        )))
+                ;
+        }
+    }));
+
     return {
         Home: Home,
         NotAuthenticated: NotAuthenticated,
@@ -311,6 +344,7 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
         Import: Import,
         Deck: Deck,
         Study: Study,
-        LoginPage: LoginPage
+        LoginPage: LoginPage,
+        Help: Help
     };
 });

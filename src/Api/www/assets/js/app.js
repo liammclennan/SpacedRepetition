@@ -5,7 +5,7 @@
 
     $.ajaxSetup({
         statusCode: {
-            401: function(){
+            401: function(){                
                 window.location.href = '/login';
             }
         },
@@ -24,20 +24,43 @@
        toastr.error(msg, 'An error occurred'); 
     };
 
+    function logoutChanges() {
+        $('.anon-menu-item').show();
+        $('.authed-menu-item').hide();
+    }
+
+    function loginChanges() {
+        $('.anon-menu-item').hide();
+        $('.authed-menu-item').show();
+    }
+
     euclid.start([{
         title: 'Home',        
         entry: function () {
             return server.getDecks().then(function (decks) {
+                loginChanges();
                 var data = {decks: decks};
                 return [components.Home(data), data];
             }, function () {
+                logoutChanges();
                 return [components.NotAuthenticated(), {}];
             });
+        },
+        actions: {
+            importDemo: function () {
+                var props = this, 
+                            url = 'https://github.com/liammclennan/maths.wiki.git';
+                return server.importGitWiki(url).then(function () {
+                    euclid.navigate('Deck', {url: encodeURIComponent(btoa(url))});
+                    return props;
+                });
+            }
         }
     },
     {
         title: 'Login',        
         entry: function () {
+            logoutChanges();
             var data = {};
             return [components.LoginPage(data), data];
         },
@@ -126,7 +149,15 @@
                 return this;
             }
         }
-    }, {
+    },
+    {
+        title: 'Help',
+        entry: function () {
+            var data = {};
+            return [components.Help(data), data];
+        }
+    },
+    {
         title: 'Study',
         state: 'Deck/Study',
         entry: function (deckId, urlEncoded) {
@@ -172,7 +203,8 @@
         'Deck/Study': '/deck/study/:deckId/:urlEncoded',
         'Login':'/login',
         'Not Authenticated': '/notauthenticated',
-        'Get Started': '/getstarted'
+        'Get Started': '/getstarted',
+        'Help': '/help'
     });
 });
 

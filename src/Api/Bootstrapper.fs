@@ -9,6 +9,7 @@ open Nancy.Conventions
 open Serilog
 open Nancy.Responses
 open Nancy.Security
+open Nancy.Cryptography
 open Nancy.Authentication.Forms
 
 type Bootstrapper() =
@@ -40,7 +41,17 @@ type Bootstrapper() =
         ()
 
     override this.ApplicationStartup(container, pipelines: IPipelines) =
+        let (p,p2) = (new System.Security.Cryptography.AesManaged(),new System.Security.Cryptography.AesManaged());
+        p.GenerateIV()
+        p2.GenerateIV()
+        let cryptographyConfiguration = 
+            new CryptographyConfiguration(
+             new RijndaelEncryptionProvider(
+              new PassphraseKeyGenerator("hWgOpkzdeONe9b28e16093c43838cf3b25c9b43a140qmslqIHLLnl", p.IV)),
+               new DefaultHmacProvider(new PassphraseKeyGenerator("pTKSrVPkwi57036c527892d4b93b829be84478258caRK0BQVFNXpn", p2.IV)));
+
         let conf = new FormsAuthenticationConfiguration() 
+        conf.CryptographyConfiguration <- cryptographyConfiguration
         conf.RedirectUrl <- "~/login"
         conf.UserMapper <- { new IUserMapper with 
                                 member x.GetUserFromIdentifier((identifier:Guid), (context:NancyContext)) = 

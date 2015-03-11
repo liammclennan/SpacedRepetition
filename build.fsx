@@ -19,6 +19,10 @@ Target "CopyWWW" (fun _ ->
     XCopy "src/Api/www" (buildDir + "/_PublishedWebsites/Api/www")
 )
 
+Target "Copy Native Binaries" (fun _ ->
+    XCopy (buildDir + "/NativeBinaries") (buildDir + "/_PublishedWebsites/Api/bin/NativeBinaries")
+)
+
 Target "BuildTest" (fun _ ->
     !! "src/Tests/*.fsproj"
       |> MSBuildDebug testDir "Build"
@@ -41,8 +45,12 @@ Target "UpdateConfig" (fun _ ->
     ConfigurationHelper.updateConnectionString 
         "studynotesapi_db" 
         (sprintf "Server=tcp:q7et4k1vyb.database.windows.net,1433;Database=studynotes;User ID=simpleauthdata@q7et4k1vyb;Password=%s;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;" (File.ReadAllText "pw.txt"))
-        (buildDir + "/_PublishedWebsites/Api/Web.config")   
+        (buildDir + "/_PublishedWebsites/Api/Web.config")  
+    ConfigurationHelper.updateAppSetting "simpleAuthUrl" "http://simpleauth1.azurewebsites.net/auth" (buildDir + "/_PublishedWebsites/Api/Web.config") 
 )
+
+Target "Upload" (fun _ ->
+    FtpHelper.uploadAFolder "simpleauth.cloudapp.net" "ftp" "greedyfly@9" (buildDir + "/_PublishedWebsites/Api/") "")
 
 // Dependencies
 "Clean"
@@ -50,6 +58,7 @@ Target "UpdateConfig" (fun _ ->
   ==> "BuildTest"
   ==> "Test"
   ==> "CopyWWW"
+  ==> "Copy Native Binaries"
   ==> "UpdateConfig"
   ==> "Default"
 

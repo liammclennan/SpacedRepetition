@@ -37,6 +37,7 @@
                         euclid.actions = route.actions || {};
                         euclid.title = route.title || "";
                         euclid.rootComponent = React.render(euclid.rootElement, mountPoint);
+                        $('form:not(.filter) :input:visible:enabled:first').focus()
                     }).done();
                 });
             }
