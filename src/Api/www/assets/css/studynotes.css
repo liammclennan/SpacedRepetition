@@ -63,12 +63,27 @@
     
 }
 
+h1,h2 {
+    font-family: 'Courgette', cursive;
+    text-transform: inherit;
+}
+
 .deck-list-item > a {
     
 }
 
 .navbar {
     margin-bottom: 0;
+}
+
+.navbar-brand {
+    font-family: 'Courgette', cursive;
+    text-transform: inherit !important;
+    font-size: 30px;
+}
+
+.navbar-nav {
+    text-transform: uppercase;
 }
 
 .hero {

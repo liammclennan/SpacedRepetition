@@ -317,11 +317,12 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
         },
         render: function () {
             return R.div({className:'row'}, 
-                    R.div({className: 'col-md-12'}, 
+                    R.div({className:'col-md-2',id:'toc'}),
+                    R.div({className: 'col-md-10'}, 
                         R.section({className:'text-center'},
                             R.h2(null, 'Help'),
                             R.hr({className:'star-primary'})),
-                        R.section(null, 
+                        R.section({id:'contents'}, 
                             R.h2(null, "Notebooks"),
                             R.p(null, 'Notebooks are collections of flash cards. Each notebook is bound to a ',
                                 R.a({href:'http://en.wikipedia.org/wiki/Wiki',target:'other'}, 'wiki'),
@@ -331,7 +332,26 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
                                 ' and create a new git repository with a wiki. Once you have a wiki you can copy its clone url from github (see image below).'),
                             R.img({src:'assets/img/githubclone.gif',style:{'boxShadow': '3px 3px 10px #888888;',border:'1px solid #666;',margin:'20px;'}}),
                             R.p(null,'Once you have a git wiki url you can create a notebook using the ',
-                                R.a({href:'#/import'}, 'import'), 'function.')
+                                R.a({href:'#/import'}, 'import'), ' function.'),
+                            R.h3(null,'Importing a Notebook'),
+                            R.ol(null, R.li(null,'Find the url of a git wiki'), R.li(null,'Enter the wiki url in the StudyNotes ', R.a({href:'#/import'}, 'import'), ' text field'), R.li(null, 'Click the "Import" button')),
+                            R.h3(null, 'Adding Flash Cards'),
+                            R.p(null, 
+                                'The intention of StudyNotes is to combine study notes and flash card data together, so that each appears in context. When you make changes to your notes it is a reminder to update your flash cards.  To add a question edit your wiki and enter a question like so:',
+                                R.div({className: 'panel panel-default'}, 
+                                    R.div({className: 'panel-heading'}, 'How to enter a question'),
+                                    R.div({className: 'panel-body'}, 'Q>>> My question goes here? <<<')),
+                                R.p(null,'Use a similar syntax for the corresponding answer:'),
+                                R.div({className: 'panel panel-default'}, 
+                                    R.div({className: 'panel-heading'}, 'How to enter an answer'),
+                                    R.div({className: 'panel-body'}, 'A>>> My answer goes here? <<<')),
+                                R.p(null, 'When you select your notebook in StudyNotes you will see a "Sync Now" button. Click this button and your new flash card will be added to the notebook. Content between Q>>> and <<< will become the front of a flash card. Content between A>>> and <<< will become the back of a flashcard.'),
+                                R.h4(null, 'Advanced'),
+                                R.p(null, "If you want your flash card questions and answers to be hidden when viewing your wiki you can surround them with script tags:"),
+                                R.div({className: 'panel panel-default'}, 
+                                    R.div({className: 'panel-heading'}, 'How to hide flash card questions and answers'),
+                                    R.div({className: 'panel-body',dangerouslySetInnerHTML:{__html: '&lt;script&gt;<br/>Q>>> My question goes here? <<<<br/>A>>> My answer goes here <<<<br/>&lt;/script&gt;'}}))
+                            )
                         )))
                 ;
         }
