@@ -68,7 +68,7 @@
             login: function (email) {
                 var props = this;
                 return server.login(email).then(function () {
-                    props.message = "An login email has been sent to your email address " + email + '. Check your email and follow the login link.';
+                    props.message = "A login email has been sent to your email address " + email + '. Check your email and follow the login link.';
                     return props;
                 });
             }

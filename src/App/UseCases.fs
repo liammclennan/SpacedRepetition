@@ -1,4 +1,5 @@
 module UseCases
+open SequentialGuid
 open Parser
 open PostgresDoc
 open SpacedRepetition
@@ -19,7 +20,7 @@ let getOrCreateUser (email:string) =
                 Data.value('(/User/email)[1]', 'nvarchar(256)') = @email"
     match users with
         | [||] -> 
-            let user = {id = System.Guid.NewGuid(); email = email}
+            let user = {id = SequentialGuid.Create(SequentialGuidType.SequentialAtEnd); email = email}
             commit store [insert user.id user]
             user
         | [|user|] -> user
@@ -36,7 +37,7 @@ let changeDeckName (deckId:System.Guid) (name:string) =
         Success ()
 
 let persistResult cardId (result:CardResult) =
-    let logId = System.Guid.NewGuid()
+    let logId = SequentialGuid.Create(SequentialGuidType.SequentialAtEnd)
     [insert logId {id = logId; ``when`` = System.DateTime.Now; result = result; cardId = cardId}]
     |> commit store    
 
@@ -128,7 +129,7 @@ let import url (userId:System.Guid) =
     if deckExists then 
         ()
     else
-        let deckId = System.Guid.NewGuid()
+        let deckId = SequentialGuid.Create(SequentialGuidType.SequentialAtEnd)
         let importedCards = getSpacedRepetitionDataFromUrl url
                             |> List.map (SpacedRepetition.cardFromDataWithNewId deckId)
         let uow = (insert deckId {id = deckId; name = trim url 25; sourceUrl = url; userId = userId} :: (importedCards |> List.map (fun card -> insert card.id card)))

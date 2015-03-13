@@ -1,4 +1,5 @@
 module SpacedRepetition
+open SequentialGuid
 open PostgresDoc
 
 [<CLIMutable>]
@@ -61,7 +62,7 @@ let cardFromDataWithId deckId cardId ((q,a):string * string) =
     { id = cardId; front = q; back = a; created = System.DateTime.Now; deckId = deckId}
 
 let cardFromDataWithNewId deckId ((q,a):string * string) = 
-    { id = System.Guid.NewGuid(); front = q; back = a; created = System.DateTime.Now; deckId = deckId}
+    { id = SequentialGuid.Create(SequentialGuidType.SequentialAtEnd); front = q; back = a; created = System.DateTime.Now; deckId = deckId}
 
 let syncCards (existingCards:Card[]) (srData:(string * string) list(*[(q,a)]*)) deckId = 
     // this function is required because the db roundtrip seems to convert
@@ -72,7 +73,7 @@ let syncCards (existingCards:Card[]) (srData:(string * string) list(*[(q,a)]*)) 
     let createCard = fun (q,a) -> 
         match Array.filter (fun card -> textMatch card.front q) existingCards with
             | [||] -> 
-                let id = System.Guid.NewGuid()
+                let id = SequentialGuid.Create(SequentialGuidType.SequentialAtEnd)
                 Some <| insert id (cardFromDataWithId deckId id (q,a))
             | matches -> let existingCard = matches.[0]
                          if textMatch existingCard.back a then 

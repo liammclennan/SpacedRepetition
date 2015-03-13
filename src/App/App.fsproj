@@ -126,6 +126,9 @@
     <Reference Include="PostgresDoc">
       <HintPath>..\packages\PostgresDoc\PostgresDoc.dll</HintPath>
     </Reference>
+    <Reference Include="SequentialGuid">
+      <HintPath>..\packages\SequentialGuid\SequentialGuid.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
