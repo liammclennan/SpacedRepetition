@@ -84,7 +84,7 @@ define('components', ['euclid','urls','auth'], function (euclid, urls, auth) {
                 this.props.message ? this.props.message :
                 R.form({ className: 'form-inline', onSubmit: this.import },
                     R.div({ className: 'form-group' },
-                        R.input({ type: 'text', className: 'form-control', placeholder: 'email', value: this.state.email, onChange: this.bindToState('email') }),
+                        R.input({ type: 'email', className: 'form-control', placeholder: 'email', value: this.state.email, onChange: this.bindToState('email') }),
                         R.button({className: 'btn btn-default'}, 'Login')
                     )
                 )
