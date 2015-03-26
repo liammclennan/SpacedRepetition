@@ -41,14 +41,11 @@ type Bootstrapper() =
         ()
 
     override this.ApplicationStartup(container, pipelines: IPipelines) =
-        let (p,p2) = (new System.Security.Cryptography.AesManaged(),new System.Security.Cryptography.AesManaged());
-        p.GenerateIV()
-        p2.GenerateIV()
         let cryptographyConfiguration = 
             new CryptographyConfiguration(
              new RijndaelEncryptionProvider(
-              new PassphraseKeyGenerator("hWgOpkzdeONe9b28e16093c43838cf3b25c9b43a140qmslqIHLLnl", p.IV)),
-               new DefaultHmacProvider(new PassphraseKeyGenerator("pTKSrVPkwi57036c527892d4b93b829be84478258caRK0BQVFNXpn", p2.IV)));
+              new PassphraseKeyGenerator("hWgOpkzdeONe9b28e16093c43838cf3b25c9b43a140qmslqIunl", [|64uy;222uy;33uy;95uy;139uy;19uy;83uy;39uy;208uy;19uy;204uy;254uy;34uy;25uy;167uy; 163uy|])),
+               new DefaultHmacProvider(new PassphraseKeyGenerator("pTKSrVPkwi57036c527892d4b93b829be84478258caRK0BQVFNXpn", [|77uy;1uy;101uy;28uy;99uy;19uy;44uy;43uy;20uy;4uy;|])));
 
         let conf = new FormsAuthenticationConfiguration() 
         conf.CryptographyConfiguration <- cryptographyConfiguration
